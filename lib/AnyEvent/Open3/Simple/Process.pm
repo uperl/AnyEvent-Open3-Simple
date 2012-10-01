@@ -9,7 +9,7 @@ use v5.10;
 
 =head1 DESCRIPTION
 
-This class represents a process being handled by AnyEvent::Open3::Simple.
+This class represents a process being handled by L<AnyEvent::Open3::Simple>.
 
 =cut
 
