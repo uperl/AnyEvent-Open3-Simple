@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use File::Temp qw( tempdir );
 use v5.10;
@@ -48,3 +48,5 @@ $done->recv;
 is $out[0], 'message1', 'out[0] = message1';
 is $out[1], 'message2', 'out[1] = message2';
 is $err[0], 'message3', 'err[0] = message3';
+
+pass 'Event Loop Is: ' . AnyEvent::detect();

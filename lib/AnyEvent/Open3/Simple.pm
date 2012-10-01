@@ -139,6 +139,34 @@ sub run
     cb  => sub {
       my($pid, $status) = @_;
       my($exit_value, $signal) = ($status >> 8, $status & 127);
+      
+      $child_stdin->close;
+      
+      # make sure we consume any stdout and stderr which hasn't
+      # been consumed yet.  This seems to make on_out.t work on
+      # cygwin
+      unless(eof $child_stdout)
+      {
+        my $input = <$child_stdout>;
+        while(defined $input)
+        {
+          chomp $input;
+          $self->{on_stdout}->($proc,$input);
+          $input = <$child_stdout>;
+        }
+      }
+
+      unless(eof $child_stderr)
+      {
+        my $input = <$child_stderr>;
+        while(defined $input)
+        {
+          chomp $input;
+          $self->{on_stderr}->($proc,$input);
+          $input = <$child_stderr>;
+        }
+      }
+      
       $self->{on_exit}->($proc, $exit_value, $signal);
       $self->{on_signal}->($proc, $signal) if $signal > 0;
       $self->{on_fail}->($proc, $exit_value) if $exit_value > 0;
