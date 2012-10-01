@@ -1,0 +1,92 @@
+=head1 NAME
+
+AnyEvent::Open3::Simple - simple interface to open3 under AnyEvent
+
+=head1 VERSION
+
+version 0.1
+
+=head1 SYNOPSIS
+
+ use v5.10;
+ use AnyEvent;
+ use AnyEvent::Open3::Simple;
+ 
+ my $done = AnyEvent->condvar;
+ 
+ my $ipc = AnyEvent::Open3::Simple(
+   on_stdout => sub { say 'out: ', pop },
+   on_stderr => sub { say 'err: ', pop },
+   on_exit   => sub {
+     my($proc, $exit_value, $signal) = @_;
+     say 'exit value: ', $exit_value;
+     say 'signal:     ', $signal;
+     $done->send;
+   },
+ );
+ 
+ $ipc->run('echo', 'hello there');
+ 
+ $done->recv;
+
+=head1 DESCRIPTION
+
+This module provides an interface to open3 while running under AnyEvent
+that delivers data from stdout and stderr as lines are written by the
+subprocess.  The interface is reminiscent of L<AnyEvent::Open3::Simple>.
+
+=head1 CONSTRUCTOR
+
+Constructor takes a hash or hashref of event callbacks.  These events
+will be triggered by the subprocess when the run method is called.
+Each even callback (except on_error) gets passed in an instance of 
+L<AnyEvent::Open3::Simple::Process> as its first argument which can be
+used to get the PID of the subprocess, or to write to it.  on_error
+does not get a process object because it indicates an error in the 
+creation of the process.
+
+=head2 EVENTS
+
+=over 4
+
+=item * on_stdout ($proc, $line)
+
+=item * on_stderr ($proc, $line)
+
+=item * on_exit ($proc, $exit_value, $signal)
+
+Fired when the processes completes, either because it called exit,
+or if it was killed by a signal.
+
+=item * on_signal ($proc, $signal)
+
+=item * on_fail ($proc, $exit_value)
+
+=item * on_error ($error)
+
+=back
+
+=head1 METHODS
+
+=head2 $ipc-E<gt>run($program, @arguments)
+
+Start the given program with the given arguments.
+Returns an instance of L<AnyEvent::Open3::Simple::Process> immediately.
+
+=head1 CAVEATS
+
+Some AnyEvent implementations may not work properly with the method
+used by AnyEvent::Open3::Simple to wait for the child process to 
+terminate.  See L<AnyEvent#CHILD-PROCESS-WATCHERS> for details.
+
+=head1 AUTHOR
+
+Graham Ollis <plicease@wdlabs.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2012 by Graham Ollis.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
