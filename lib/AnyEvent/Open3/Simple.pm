@@ -160,6 +160,8 @@ Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
 terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
 
+This module is not supported under Windows.  Patches are welcome.
+
 =head1 SEE ALSO
 
 L<AnyEvent::Subprocess>, L<AnyEvent::Util>, L<AnyEvent::Run>.
