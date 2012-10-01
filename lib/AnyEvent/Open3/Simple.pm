@@ -38,7 +38,7 @@ use AnyEvent::Open3::Simple::Process;
 
 This module provides an interface to open3 while running under AnyEvent
 that delivers data from stdout and stderr as lines are written by the
-subprocess.  The interface is reminiscent of L<AnyEvent::Open3::Simple>.
+subprocess.  The interface is reminiscent of L<IPC::Open3::Simple>.
 
 =head1 CONSTRUCTOR
 
@@ -156,6 +156,6 @@ sub run
 
 Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
-terminate.  See L<AnyEvent#CHILD-PROCESS-WATCHERS> for details.
+terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
 
 =cut
