@@ -1,1 +1,10 @@
---- {}
+---
+pod_spelling_system:
+  stopwords:
+    - AnyEvent
+    - stderr
+
+pod_coverage:
+  private:
+    - ".*#new"
+
