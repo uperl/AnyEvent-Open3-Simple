@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.3       2012-10-02 13:42:28 America/New_York
   - documentation fixes
   - re-enable on_error.t for newer perl
 
