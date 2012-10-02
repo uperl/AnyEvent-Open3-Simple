@@ -14,7 +14,7 @@ version 0.4
  
  my $done = AnyEvent->condvar;
  
- my $ipc = AnyEvent::Open3::Simple(
+ my $ipc = AnyEvent::Open3::Simple->new(
    on_stdout => sub { say 'out: ', pop },
    on_stderr => sub { say 'err: ', pop },
    on_exit   => sub {
