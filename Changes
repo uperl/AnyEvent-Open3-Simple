@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - documentation fixes
 
 0.2       2012-10-02 09:16:57 EST5EDT
   - disabled unreliable test
