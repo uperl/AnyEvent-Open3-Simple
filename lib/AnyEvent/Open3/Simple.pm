@@ -109,7 +109,7 @@ sub new
 {
   state $default_handler = sub { };
   my $class = shift;
-  my $args = ref $_[0] eq 'HSAH' ? shift : { @_ };
+  my $args = ref $_[0] eq 'HASH' ? shift : { @_ };
   my %self;
   $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error );
   bless \%self, $class;
