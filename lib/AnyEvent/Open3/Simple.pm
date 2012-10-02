@@ -42,6 +42,11 @@ subprocess.  The interface is reminiscent of L<IPC::Open3::Simple>,
 although this module does provides a somewhat different API, so it
 cannot be used a drop in replacement for that module.
 
+There are already a number of interfaces for interacting with subprocesses
+in the context of L<AnyEvent>, but this one is the most convenient for my
+usage.  Note the modules listed in the SEE ALSO section below for other 
+interfaces that may be more or less appropriate.
+
 =head1 CONSTRUCTOR
 
 Constructor takes a hash or hashref of event callbacks.  These events
