@@ -1,6 +1,6 @@
 =head1 NAME
 
-AnyEvent::Open3::Simple - simple interface to open3 under AnyEvent
+AnyEvent::Open3::Simple - interface to open3 under AnyEvent
 
 =head1 VERSION
 

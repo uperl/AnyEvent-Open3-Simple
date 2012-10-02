@@ -8,7 +8,7 @@ use IPC::Open3 qw( open3 );
 use Symbol qw( gensym );
 use AnyEvent::Open3::Simple::Process;
 
-# ABSTRACT: simple interface to open3 under AnyEvent
+# ABSTRACT: interface to open3 under AnyEvent
 # VERSION
 
 =head1 SYNOPSIS
