@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix type which broke when passing in hashref to constructor (GH#1)
 
 0.3       2012-10-02 13:42:28 America/New_York
   - documentation fixes
