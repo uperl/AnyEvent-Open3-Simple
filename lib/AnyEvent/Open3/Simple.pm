@@ -54,22 +54,44 @@ creation of the process.
 
 =head2 EVENTS
 
+Not all of these events will fire depending on the execution of the 
+child process.
+
 =over 4
+
+=item * on_start ($proc)
+
+Called after the process is created, but before the run method returns
+(that is, it does not wait to re-enter the event loop first).
 
 =item * on_stdout ($proc, $line)
 
+Called on every line printed to stdout by the child process.
+
 =item * on_stderr ($proc, $line)
+
+Called on every line printed to stderr by the child process.
 
 =item * on_exit ($proc, $exit_value, $signal)
 
-Fired when the processes completes, either because it called exit,
-or if it was killed by a signal.
+Called when the processes completes, either because it called exit,
+or if it was killed by a signal.  
 
 =item * on_signal ($proc, $signal)
 
+Called when the processes is terminated by a signal.
+
 =item * on_fail ($proc, $exit_value)
 
+Called when the process returns a non-zero exit value.
+
 =item * on_error ($error)
+
+Called when there is an execution error, for example, if you ask
+to run a program that does not exist.  No process is passed in
+because the process failed to create.  The error passed in is 
+the error thrown by L<IPC::Open3> (typically a string which begins
+with "open3: ...").
 
 =back
 
@@ -81,7 +103,7 @@ sub new
   my $class = shift;
   my $args = ref $_[0] eq 'HSAH' ? shift : { @_ };
   my %self;
-  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_exit on_signal on_fail on_error );
+  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error );
   bless \%self, $class;
 }
 
@@ -89,8 +111,10 @@ sub new
 
 =head2 $ipc-E<gt>run($program, @arguments)
 
-Start the given program with the given arguments.
-Returns an instance of L<AnyEvent::Open3::Simple::Process> immediately.
+Start the given program with the given arguments.  Returns
+immediately.  Any events that have been specified in the
+constructor (except for on_start) will not be called until
+the process re-enters the event loop.
 
 =cut
 
@@ -110,6 +134,8 @@ sub run
   }
   
   my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
+  
+  $self->{on_start}->($proc);
   
   my $watcher_stdout = AnyEvent->io(
     fh   => $child_stdout,
@@ -145,26 +171,20 @@ sub run
       # make sure we consume any stdout and stderr which hasn't
       # been consumed yet.  This seems to make on_out.t work on
       # cygwin
-      unless(eof $child_stdout)
+      while(!eof $child_stdout)
       {
         my $input = <$child_stdout>;
-        while(defined $input)
-        {
-          chomp $input;
-          $self->{on_stdout}->($proc,$input);
-          $input = <$child_stdout>;
-        }
+        last unless defined $input;
+        chomp $input;
+        $self->{on_stdout}->($proc,$input);
       }
-
-      unless(eof $child_stderr)
+      
+      while(!eof $child_stderr)
       {
         my $input = <$child_stderr>;
-        while(defined $input)
-        {
-          chomp $input;
-          $self->{on_stderr}->($proc,$input);
-          $input = <$child_stderr>;
-        }
+        last unless defined $input;
+        chomp $input;
+        $self->{on_stderr}->($proc,$input);
       }
       
       $self->{on_exit}->($proc, $exit_value, $signal);
@@ -177,7 +197,7 @@ sub run
     },
   );
   
-  $proc;
+  $self;
 }
 
 1;
@@ -188,7 +208,9 @@ Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
 terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
 
-This module is not supported under Windows.  Patches are welcome.
+This module is not supported under Windows (MSWin32), but it does seem
+to work under Cygwin (cygwin).  Patches are welcome for any platforms
+that don't work.
 
 =head1 SEE ALSO
 

@@ -25,6 +25,15 @@ my $ipc = AnyEvent::Open3::Simple->new(
   on_exit => sub {
     $done->send;
   },
+  on_start => sub {
+    my($proc) = @_;
+    eval { $proc->say('message1') };
+    diag $@ if $@;
+    eval { $proc->say('message2') };
+    diag $@ if $@;
+    eval { $proc->close };
+    diag $@ if $@;
+  },
 );
 
 my $timeout = AnyEvent->timer(
@@ -33,14 +42,7 @@ my $timeout = AnyEvent->timer(
 );
 
 my $proc = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
-isa_ok $proc, 'AnyEvent::Open3::Simple::Process';
-
-eval { $proc->say('message1') };
-diag $@ if $@;
-eval { $proc->say('message2') };
-diag $@ if $@;
-eval { $proc->close };
-diag $@ if $@;
+isa_ok $proc, 'AnyEvent::Open3::Simple';
 
 $done->recv;
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use AnyEvent::Open3::Simple;
 
 use File::Temp qw( tempdir );
@@ -18,8 +18,12 @@ close $fh;
 my $done = AnyEvent->condvar;
 
 my $child_pid;
+my $proc;
 
 my $ipc = AnyEvent::Open3::Simple->new(
+  on_start => sub {
+    ($proc) = @_;
+  },
   on_exit => sub {
     my($proc) = @_;
     $done->send;
@@ -29,7 +33,8 @@ my $ipc = AnyEvent::Open3::Simple->new(
   },
 );
 
-my $proc = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
+my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
+isa_ok $ret, 'AnyEvent::Open3::Simple';
 
 $done->recv;
 
