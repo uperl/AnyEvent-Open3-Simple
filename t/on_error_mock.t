@@ -1,23 +1,21 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 2;
 
-if($^V >= v5.14)
-{
-  plan tests => 2;
-}
-else
-{
-  plan skip_all => 'test requires perl 5.14 or better';
-}
+package IPC::Open3;
+
+BEGIN { $INC{'IPC/Open3.pm'} = __FILE__ }
+use base qw( Exporter );
+BEGIN { our @EXPORT_OK = 'open3' }
+
+sub open3 { die "open3: this is an error" }
+
+package main;
 
 use v5.10;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
-use File::Temp qw( tempdir );
-use File::Spec;
 
-my $dir = tempdir( CLEANUP => 1 );
 
 my $done = AnyEvent->condvar;
 
@@ -35,7 +33,7 @@ my $ipc = AnyEvent::Open3::Simple->new(
   },
 );
 
-$ipc->run(File::Spec->catfile($dir, 'bogus.pl'));
+$ipc->run('foo', 'bar');
 
 $done->recv;
 

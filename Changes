@@ -2,6 +2,7 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
   - documentation fixes
+  - re-enable on_error.t for newer perl
 
 0.2       2012-10-02 09:16:57 EST5EDT
   - disabled unreliable test
