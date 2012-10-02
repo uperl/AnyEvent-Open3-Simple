@@ -22,7 +22,7 @@ do {
   close $fh;
 };
 
-my $done = AnyEvent->condvar;
+my $done;
 
 my($proc, $signal, $exit_value1, $exit_value2);
 
@@ -42,11 +42,12 @@ my $timeout = AnyEvent->timer (
 );
 
 do {
+  $done = AnyEvent->condvar;
+
   my $ret = eval { $ipc->run($^X, File::Spec->catfile($dir, 'child_normal.pl')) };
   diag $@ if $@;
   isa_ok $ret, 'AnyEvent::Open3::Simple';
   
-  $done = AnyEvent->condvar;
   $done->recv;
   
   is $exit_value1, undef, 'exit_value1 = undef';
@@ -54,11 +55,12 @@ do {
 };
 
 do {
+  $done = AnyEvent->condvar;
+
   my $ret = eval { $ipc->run($^X, File::Spec->catfile($dir, 'child_exit3.pl')) };
   diag $@ if $@;
   isa_ok $ret, 'AnyEvent::Open3::Simple';
 
-  $done = AnyEvent->condvar;
   $done->recv;
   
   is $exit_value1, 3, 'exit_value1 = 3';
