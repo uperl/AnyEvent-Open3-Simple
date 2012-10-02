@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Test::More skip_all => 'test depends on unreliable error reporting';
 use Test::More tests => 2;
 
 use v5.10;
