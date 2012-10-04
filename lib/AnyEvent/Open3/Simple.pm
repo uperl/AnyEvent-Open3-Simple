@@ -178,7 +178,7 @@ sub run
       my($pid, $status) = @_;
       my($exit_value, $signal) = ($status >> 8, $status & 127);
       
-      $child_stdin->close;
+      $proc->close;
       
       # make sure we consume any stdout and stderr which hasn't
       # been consumed yet.  This seems to make on_out.t work on

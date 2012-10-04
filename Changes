@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Use Core::close instead of IO::Handle->close
+  - Use Core::print instead of IO::Handle->print
 
 0.5       2012-10-02 15:53:35 America/New_York
   - Fix glaring error in the documentation SYNOPSIS

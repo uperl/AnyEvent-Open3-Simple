@@ -37,7 +37,8 @@ Write to the subprocess' stdin.
 
 sub print
 {
-  shift->{stdin}->print(@_);
+  my $stdin = shift->{stdin};
+  print $stdin @_;
 }
 
 =head2 $proc-E<gt>say( @data )
@@ -59,7 +60,7 @@ Close the subprocess' stdin.
 
 sub close
 {
-  shift->{stdin}->close;
+  CORE::close(shift->{stdin});
 }
 
 1;
