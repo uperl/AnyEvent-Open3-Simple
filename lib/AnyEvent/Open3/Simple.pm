@@ -220,9 +220,9 @@ Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
 terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
 
-This module is not supported under Windows (MSWin32), but it does seem
-to work under Cygwin (cygwin).  Patches are welcome for any platforms
-that don't work.
+This module is not supported under Windows ($^O eq 'MSWin32'), but it 
+does seem to work under Cygwin ($^O eq 'cygwin').  Patches are welcome 
+for any platforms that don't work.
 
 There are some traps for the unwary relating to buffers and deadlocks,
 L<IPC::Open3> is recommended reading.
