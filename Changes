@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.61      2012-11-29 12:19:35 America/New_York
   - Documentation clarification
   - Don't include core prereqs
 
