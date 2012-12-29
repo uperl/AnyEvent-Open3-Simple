@@ -44,7 +44,7 @@ my $timeout = AnyEvent->timer (
 do {
   $done = AnyEvent->condvar;
 
-  my $ret = eval { $ipc->run($^X, File::Spec->catfile($dir, 'child_normal.pl')) };
+  my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child_normal.pl'));
   diag $@ if $@;
   isa_ok $ret, 'AnyEvent::Open3::Simple';
   
@@ -57,7 +57,7 @@ do {
 do {
   $done = AnyEvent->condvar;
 
-  my $ret = eval { $ipc->run($^X, File::Spec->catfile($dir, 'child_sig9.pl')) };
+  my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child_sig9.pl'));
   diag $@ if $@;
   isa_ok $ret, 'AnyEvent::Open3::Simple';
 

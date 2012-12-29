@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - unstuck tests on MSWin32.  Platform is still unsupported as per the docs.
 
 0.61      2012-11-29 12:19:35 America/New_York
   - Documentation clarification
