@@ -9,7 +9,8 @@ use File::Temp qw( tempdir );
 use File::Spec;
 
 # don't really have time at the moment to figure out why this
-# isn't at least failing on MSWin32, so skip this test.  There
+# isn't at least failing on MSWin32 (it spews some permission
+# errors and then gets stuck), so skip this test.  There
 # are plenty of other tests that will fail on Windows anyway.
 plan skip_all => 'test broken on MSWin32' if $^O eq 'MSWin32';
 plan tests => 3;
