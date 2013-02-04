@@ -1,10 +1,12 @@
+=pod
+
 =head1 NAME
 
 AnyEvent::Open3::Simple - interface to open3 under AnyEvent
 
 =head1 VERSION
 
-version 0.62
+version 0.63
 
 =head1 SYNOPSIS
 
