@@ -45,7 +45,7 @@ my $ipc = AnyEvent::Open3::Simple->new(
 
 my $timeout = AnyEvent->timer(
   after => 5,
-  cb    => sub { diag 'timeout!'; $done->send },
+  cb    => sub { diag 'timeout!'; exit 2 },
 );
 
 my $proc = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
