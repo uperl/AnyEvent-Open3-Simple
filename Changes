@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - added timeout to proc.t
 
 0.63      2013-02-04 08:27:08 America/New_York
   - adjust timout detection and failure in test to be more aggressive

@@ -36,6 +36,11 @@ my $ipc = AnyEvent::Open3::Simple->new(
 my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
 isa_ok $ret, 'AnyEvent::Open3::Simple';
 
+my $timeout = AnyEvent->timer (
+  after => 5,
+  cb    => sub { diag 'timeout!'; exit 2; },
+);
+
 $done->recv;
 
 is eval { $proc->pid }, $child_pid, "both procs have same pid";
