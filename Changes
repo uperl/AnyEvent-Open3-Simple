@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - documentation updates
 
 0.64      2013-02-05 08:54:37 America/New_York
   - added timeout to proc.t

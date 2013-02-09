@@ -5,6 +5,7 @@ pod_spelling_system:
     - stderr
     - API
     - MSWin32
+    - MSWin
 
 pod_coverage:
   private:
