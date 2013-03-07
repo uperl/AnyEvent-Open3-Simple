@@ -110,6 +110,10 @@ Called on every line printed to stderr by the child process.
 Called when the processes completes, either because it called exit,
 or if it was killed by a signal.  
 
+=item * on_success ($proc)
+
+Called when the process returns zero exit value and is not terminated by a signal.
+
 =item * on_signal ($proc, $signal)
 
 Called when the processes is terminated by a signal.
@@ -128,7 +132,7 @@ sub new
   my $class = shift;
   my $args = (reftype($_[0]) // '') eq 'HASH' ? shift : { @_ };
   my %self;
-  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error );
+  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   bless \%self, $class;
 }
 
@@ -215,6 +219,7 @@ sub run
       $self->{on_exit}->($proc, $exit_value, $signal);
       $self->{on_signal}->($proc, $signal) if $signal > 0;
       $self->{on_fail}->($proc, $exit_value) if $exit_value > 0;
+      $self->{on_success}->($proc) if $signal == 0 && $exit_value == 0;
       undef $watcher_stdout;
       undef $watcher_stderr;
       undef $watcher_child;

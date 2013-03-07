@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - added on_success callback
 
 0.65      2013-02-09 17:10:56 America/New_York
   - documentation updates
