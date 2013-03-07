@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.66      2013-03-07 08:39:25 America/New_York
   - added on_success callback
 
 0.65      2013-02-09 17:10:56 America/New_York

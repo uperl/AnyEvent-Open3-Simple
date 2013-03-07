@@ -6,7 +6,7 @@ AnyEvent::Open3::Simple - interface to open3 under AnyEvent
 
 =head1 VERSION
 
-version 0.65
+version 0.66
 
 =head1 SYNOPSIS
 
@@ -105,6 +105,10 @@ Called on every line printed to stderr by the child process.
 
 Called when the processes completes, either because it called exit,
 or if it was killed by a signal.  
+
+=item * on_success ($proc)
+
+Called when the process returns zero exit value and is not terminated by a signal.
 
 =item * on_signal ($proc, $signal)
 
