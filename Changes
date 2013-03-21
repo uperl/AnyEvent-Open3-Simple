@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.67      2013-03-21 11:01:47 America/New_York
+  - fix META.json,yml
+
 0.66      2013-03-07 08:39:25 America/New_York
   - added on_success callback
 
