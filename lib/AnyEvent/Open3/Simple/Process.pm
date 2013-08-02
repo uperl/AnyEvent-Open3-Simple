@@ -19,7 +19,7 @@ sub new
   bless { pid => $pid, stdin => $stdin }, $class;
 }
 
-=head1 METHODS
+=head1 ATTRIBUTES
 
 =head2 $proc-E<gt>pid
 
@@ -28,6 +28,8 @@ Return the Process ID of the child process.
 =cut
 
 sub pid { shift->{pid} }
+
+=head1 METHODS
 
 =head2 $proc-E<gt>print( @data )
 
