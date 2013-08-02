@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - documentation tweaks
 
 0.67      2013-03-21 11:01:47 America/New_York
   - fix META.json,yml
