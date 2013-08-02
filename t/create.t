@@ -8,7 +8,7 @@ my $ipc = eval { AnyEvent::Open3::Simple->new };
 diag $@ if $@;
 isa_ok $ipc, 'AnyEvent::Open3::Simple';
 
-my $proc = eval { no warnings 'once'; AnyEvent::Open3::Simple::Process->new(42, \*foo) };
+my $proc = eval { no warnings 'once'; AnyEvent::Open3::Simple::Process->new(pid => 42, stdin => \*foo) };
 diag $@ if $@;
 isa_ok $proc, 'AnyEvent::Open3::Simple::Process';
 

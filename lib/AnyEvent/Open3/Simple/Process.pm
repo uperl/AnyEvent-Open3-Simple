@@ -1,23 +1,16 @@
-package AnyEvent::Open3::Simple::Process;
-
 use strict;
 use warnings;
 use v5.10;
+use mop;
 
 # ABSTRACT: process run using AnyEvent::Open3::Simple
 # VERSION
 
+class AnyEvent::Open3::Simple::Process {
+
 =head1 DESCRIPTION
 
 This class represents a process being handled by L<AnyEvent::Open3::Simple>.
-
-=cut
-
-sub new
-{
-  my($class, $pid, $stdin) = @_;
-  bless { pid => $pid, stdin => $stdin }, $class;
-}
 
 =head1 METHODS
 
@@ -27,7 +20,8 @@ Return the Process ID of the child process.
 
 =cut
 
-sub pid { shift->{pid} }
+  has $pid is ro = die '$pid is required';
+  has $stdin is ro = die '$stind is required';
 
 =head2 $proc-E<gt>print( @data )
 
@@ -35,11 +29,10 @@ Write to the subprocess' stdin.
 
 =cut
 
-sub print
-{
-  my $stdin = shift->{stdin};
-  print $stdin @_;
-}
+  method print
+  {
+    print $stdin @_;
+  }
 
 =head2 $proc-E<gt>say( @data )
 
@@ -47,10 +40,10 @@ Write to the subprocess' stdin, adding a new line at the end.
 
 =cut
 
-sub say
-{
-  shift->print(@_, "\n");
-}
+  method say
+  {
+    $self->print(@_, "\n");
+  }
 
 =head2 $proc-E<gt>close
 
@@ -58,9 +51,11 @@ Close the subprocess' stdin.
 
 =cut
 
-sub close
-{
-  CORE::close(shift->{stdin});
+  method close
+  {
+    CORE::close($stdin);
+  }
+
 }
 
 1;

@@ -1,5 +1,3 @@
-package AnyEvent::Open3::Simple;
-
 use strict;
 use warnings;
 use v5.10;
@@ -8,9 +6,14 @@ use IPC::Open3 qw( open3 );
 use Scalar::Util qw( reftype );
 use Symbol qw( gensym );
 use AnyEvent::Open3::Simple::Process;
+use mop;
 
 # ABSTRACT: interface to open3 under AnyEvent
 # VERSION
+
+my $default = sub {};
+
+class AnyEvent::Open3::Simple {
 
 =head1 SYNOPSIS
 
@@ -85,6 +88,10 @@ will be called.
 Called after the process is created, but before the run method returns
 (that is, it does not wait to re-enter the event loop first).
 
+=cut
+
+  has $on_start is ro = $default;
+
 =item * on_error ($error)
 
 Called when there is an execution error, for example, if you ask
@@ -97,44 +104,60 @@ In some environments open3 is unable to detect exec errors in the
 child, so you may not be able to rely on this event.  It does 
 seem to work consistently on Perl 5.14 or better though.
 
+=cut
+
+  has $on_error is ro = $default;
+
 =item * on_stdout ($proc, $line)
 
 Called on every line printed to stdout by the child process.
 
+=cut
+
+  has $on_stdout is ro = $default;
+
 =item * on_stderr ($proc, $line)
 
 Called on every line printed to stderr by the child process.
+
+=cut
+
+  has $on_stderr is ro = $default;
 
 =item * on_exit ($proc, $exit_value, $signal)
 
 Called when the processes completes, either because it called exit,
 or if it was killed by a signal.  
 
+=cut
+
+  has $on_exit is ro = $default;
+
 =item * on_success ($proc)
 
 Called when the process returns zero exit value and is not terminated by a signal.
+
+=cut
+
+  has $on_success is ro = $default;
 
 =item * on_signal ($proc, $signal)
 
 Called when the processes is terminated by a signal.
 
+=cut
+
+  has $on_signal is ro = $default;
+
 =item * on_fail ($proc, $exit_value)
 
 Called when the process returns a non-zero exit value.
 
-=back
-
 =cut
 
-sub new
-{
-  state $default_handler = sub { };
-  my $class = shift;
-  my $args = (reftype($_[0]) // '') eq 'HASH' ? shift : { @_ };
-  my %self;
-  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
-  bless \%self, $class;
-}
+  has $on_fail is ro = $default;
+
+=back
 
 =head1 METHODS
 
@@ -147,9 +170,9 @@ the process re-enters the event loop.
 
 =cut
 
-sub run
+method run
 {
-  my($self, $program, @arguments) = @_;
+  my($program, @arguments) = @_;
   
   my($child_stdin, $child_stdout, $child_stderr);
   $child_stderr = gensym;
@@ -158,13 +181,13 @@ sub run
   
   if(my $error = $@)
   {
-    $self->{on_error}->($error);
+    $on_error->($error);
     return;
   }
   
-  my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
+  my $proc = AnyEvent::Open3::Simple::Process->new( pid => $pid, stdin => $child_stdin);
   
-  $self->{on_start}->($proc);
+  $on_start->($proc);
   
   my $watcher_stdout = AnyEvent->io(
     fh   => $child_stdout,
@@ -173,7 +196,7 @@ sub run
       my $input = <$child_stdout>;
       return unless defined $input;
       chomp $input;
-      $self->{on_stdout}->($proc, $input);
+      $on_stdout->($proc, $input);
     },
   );
   
@@ -184,7 +207,7 @@ sub run
       my $input = <$child_stderr>;
       return unless defined $input;
       chomp $input;
-      $self->{on_stderr}->($proc, $input);
+      $on_stderr->($proc, $input);
     },
   );
   
@@ -205,7 +228,7 @@ sub run
         my $input = <$child_stdout>;
         last unless defined $input;
         chomp $input;
-        $self->{on_stdout}->($proc,$input);
+        $on_stdout->($proc,$input);
       }
       
       while(!eof $child_stderr)
@@ -213,13 +236,13 @@ sub run
         my $input = <$child_stderr>;
         last unless defined $input;
         chomp $input;
-        $self->{on_stderr}->($proc,$input);
+        $on_stderr->($proc,$input);
       }
       
-      $self->{on_exit}->($proc, $exit_value, $signal);
-      $self->{on_signal}->($proc, $signal) if $signal > 0;
-      $self->{on_fail}->($proc, $exit_value) if $exit_value > 0;
-      $self->{on_success}->($proc) if $signal == 0 && $exit_value == 0;
+      $on_exit->($proc, $exit_value, $signal);
+      $on_signal->($proc, $signal) if $signal > 0;
+      $on_fail->($proc, $exit_value) if $exit_value > 0;
+      $on_success->($proc) if $signal == 0 && $exit_value == 0;
       undef $watcher_stdout;
       undef $watcher_stderr;
       undef $watcher_child;
@@ -228,6 +251,8 @@ sub run
   );
   
   $self;
+}
+
 }
 
 1;
