@@ -43,6 +43,11 @@ use AnyEvent::Open3::Simple::Process;
      say 'signal:     ', $signal;
      $done->send;
    },
+   on_error => sub {
+     my $error = shift;      # the exception thrown by IPC::Open3::open3
+     warn "error: $error";
+     $done->send;
+   },
  );
  
  $ipc->run('echo', 'hello there');
