@@ -140,7 +140,7 @@ sub new
   $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   $self{impl} = $args->{implementation} 
              // $ENV{ANYEVENT_OPEN3_SIMPLE}
-             // 'child';
+             // ($^O eq 'MSWin32' ? 'idle' : 'child');
   unless($self{impl} =~ /^(idle|child)$/)
   {
     die "unknown implementation $self{impl}";
@@ -184,7 +184,7 @@ sub run
     cb   => sub {
       my $input = <$child_stdout>;
       return unless defined $input;
-      chomp $input;
+      chomp($input);
       $self->{on_stdout}->($proc, $input);
     },
   );
@@ -195,7 +195,7 @@ sub run
     cb   => sub {
       my $input = <$child_stderr>;
       return unless defined $input;
-      chomp $input;
+      chomp($input);
       $self->{on_stderr}->($proc, $input);
     },
   );
@@ -215,7 +215,7 @@ sub run
     {
       my $input = <$child_stdout>;
       last unless defined $input;
-      chomp $input;
+      chomp($input);
       $self->{on_stdout}->($proc,$input);
     }
       
@@ -223,7 +223,7 @@ sub run
     {
       my $input = <$child_stderr>;
       last unless defined $input;
-      chomp $input;
+      chomp($input);
       $self->{on_stderr}->($proc,$input);
     }
       
@@ -240,7 +240,6 @@ sub run
   if($self->{impl} eq 'idle')
   {
     $watcher_child = AnyEvent->idle(cb => sub {
-      print "IDLE pid = $pid\n";
       my $kid = eval q{
         use POSIX ":sys_wait_h";
         waitpid($pid, WNOHANG);
@@ -258,6 +257,17 @@ sub run
   }
   
   $self;
+}
+
+if($^O eq 'MSWin32')
+{
+  eval q{
+    sub chomp {
+      $_[0] =~ s/\r\n?$//;
+      return 1;
+    }
+  };
+  die $@ if $@;
 }
 
 1;
