@@ -192,45 +192,63 @@ sub run
       $self->{on_stderr}->($proc, $input);
     },
   );
-  
+
   my $watcher_child;
-  $watcher_child = AnyEvent->child(
-    pid => $pid,
-    cb  => sub {
-      my($pid, $status) = @_;
-      my($exit_value, $signal) = ($status >> 8, $status & 127);
+
+  my $end_cb = sub {
+    my($pid, $status) = @_;
+    my($exit_value, $signal) = ($status >> 8, $status & 127);
       
-      $proc->close;
+    $proc->close;
       
-      # make sure we consume any stdout and stderr which hasn't
-      # been consumed yet.  This seems to make on_out.t work on
-      # cygwin
-      while(!eof $child_stdout)
-      {
-        my $input = <$child_stdout>;
-        last unless defined $input;
-        chomp $input;
-        $self->{on_stdout}->($proc,$input);
-      }
+    # make sure we consume any stdout and stderr which hasn't
+    # been consumed yet.  This seems to make on_out.t work on
+    # cygwin
+    while(!eof $child_stdout)
+    {
+      my $input = <$child_stdout>;
+      last unless defined $input;
+      chomp $input;
+      $self->{on_stdout}->($proc,$input);
+    }
       
-      while(!eof $child_stderr)
-      {
-        my $input = <$child_stderr>;
-        last unless defined $input;
-        chomp $input;
-        $self->{on_stderr}->($proc,$input);
-      }
+    while(!eof $child_stderr)
+    {
+      my $input = <$child_stderr>;
+      last unless defined $input;
+      chomp $input;
+      $self->{on_stderr}->($proc,$input);
+    }
       
-      $self->{on_exit}->($proc, $exit_value, $signal);
-      $self->{on_signal}->($proc, $signal) if $signal > 0;
-      $self->{on_fail}->($proc, $exit_value) if $exit_value > 0;
-      $self->{on_success}->($proc) if $signal == 0 && $exit_value == 0;
-      undef $watcher_stdout;
-      undef $watcher_stderr;
-      undef $watcher_child;
-      undef $proc;
-    },
-  );
+    $self->{on_exit}->($proc, $exit_value, $signal);
+    $self->{on_signal}->($proc, $signal) if $signal > 0;
+    $self->{on_fail}->($proc, $exit_value) if $exit_value > 0;
+    $self->{on_success}->($proc) if $signal == 0 && $exit_value == 0;
+    undef $watcher_stdout;
+    undef $watcher_stderr;
+    undef $watcher_child;
+    undef $proc;
+  };
+
+  if(($ENV{ANYEVENT_OPEN3_SIMPLE}//'') eq 'idle')
+  {
+    $watcher_child = AnyEvent->idle(cb => sub {
+      print "IDLE pid = $pid\n";
+      my $kid = eval q{
+        use POSIX ":sys_wait_h";
+        waitpid($pid, WNOHANG);
+      };
+      die $@ if $@;
+      $end_cb->($kid, $?);
+    });
+  }
+  else
+  {
+    $watcher_child = AnyEvent->child(
+      pid => $pid,
+      cb  => $end_cb,
+    );
+  }
   
   $self;
 }
