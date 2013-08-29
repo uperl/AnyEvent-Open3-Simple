@@ -184,7 +184,7 @@ sub run
     cb   => sub {
       my $input = <$child_stdout>;
       return unless defined $input;
-      chomp($input);
+      $input =~ s/(\015?\012|\015)$//;
       $self->{on_stdout}->($proc, $input);
     },
   );
@@ -195,7 +195,7 @@ sub run
     cb   => sub {
       my $input = <$child_stderr>;
       return unless defined $input;
-      chomp($input);
+      $input =~ s/(\015?\012|\015)$//;
       $self->{on_stderr}->($proc, $input);
     },
   );
@@ -215,7 +215,7 @@ sub run
     {
       my $input = <$child_stdout>;
       last unless defined $input;
-      chomp($input);
+      $input =~ s/(\015?\012|\015)$//;
       $self->{on_stdout}->($proc,$input);
     }
       
@@ -223,7 +223,7 @@ sub run
     {
       my $input = <$child_stderr>;
       last unless defined $input;
-      chomp($input);
+      $input =~ s/(\015?\012|\015)$//;
       $self->{on_stderr}->($proc,$input);
     }
       
@@ -245,7 +245,7 @@ sub run
         waitpid($pid, WNOHANG);
       };
       die $@ if $@;
-      $end_cb->($kid, $?);
+      $end_cb->($kid, $?) if $kid == $pid;
     });
   }
   else
@@ -257,17 +257,6 @@ sub run
   }
   
   $self;
-}
-
-if($^O eq 'MSWin32')
-{
-  eval q{
-    sub chomp {
-      $_[0] =~ s/\r\n?$//;
-      return 1;
-    }
-  };
-  die $@ if $@;
 }
 
 1;
