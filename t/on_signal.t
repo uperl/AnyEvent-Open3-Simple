@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More $^O eq 'MSWin32' ? (skip_all => 'on_signal not supported on windows') : (tests => 6);
 use AnyEvent::Open3::Simple;
 
 use File::Temp qw( tempdir );
