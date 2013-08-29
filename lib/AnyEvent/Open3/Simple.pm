@@ -138,6 +138,13 @@ sub new
   my $args = (reftype($_[0]) // '') eq 'HASH' ? shift : { @_ };
   my %self;
   $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
+  $self{impl} = $args->{implementation} 
+             // $ENV{ANYEVENT_OPEN3_SIMPLE}
+             // 'child';
+  unless($self{impl} =~ /^(idle|child)$/)
+  {
+    die "unknown implementation $self{impl}";
+  }
   bless \%self, $class;
 }
 
@@ -230,7 +237,7 @@ sub run
     undef $proc;
   };
 
-  if(($ENV{ANYEVENT_OPEN3_SIMPLE}//'') eq 'idle')
+  if($self->{impl} eq 'idle')
   {
     $watcher_child = AnyEvent->idle(cb => sub {
       print "IDLE pid = $pid\n";
