@@ -87,6 +87,12 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
+=item * raw
+
+If set to true (false is the default) then output will not be passed
+into the C<on_stdout> and C<on_stderr> callbacks as lines, but instead
+as chunks in whatever order they come.  New lines will not be stripped.
+
 =back
 
 =head2 EVENTS
@@ -166,6 +172,7 @@ sub new
   $self{impl} = $args->{implementation} 
              // $ENV{ANYEVENT_OPEN3_SIMPLE}
              // ($^O eq 'MSWin32' ? 'idle' : 'child');
+  $self{raw} = $args->{raw} // 0;
   unless($self{impl} =~ /^(idle|child)$/)
   {
     croak "unknown implementation $self{impl}";
@@ -206,23 +213,35 @@ sub run
   my $watcher_stdout = AnyEvent->io(
     fh   => $child_stdout,
     poll => 'r',
-    cb   => sub {
-      my $input = <$child_stdout>;
-      return unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      $self->{on_stdout}->($proc, $input);
-    },
+    cb   => $self->{raw}
+    ? sub {
+        local $/;
+        $self->{on_stdout}->($proc, <$child_stdout>);
+      }
+    : sub {
+        my $input = <$child_stdout>;
+        return unless defined $input;
+        $input =~ s/(\015?\012|\015)$//;
+        $self->{on_stdout}->($proc, $input);
+      }
+    ,
   );
-  
+
   my $watcher_stderr = AnyEvent->io(
     fh   => $child_stderr,
     poll => 'r',
-    cb   => sub {
-      my $input = <$child_stderr>;
-      return unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      $self->{on_stderr}->($proc, $input);
-    },
+    cb   => $self->{raw}
+    ? sub {
+        local $/;
+        $self->{on_stderr}->($proc, <$child_stderr>);
+      }
+    : sub {
+        my $input = <$child_stderr>;
+        return unless defined $input;
+        $input =~ s/(\015?\012|\015)$//;
+        $self->{on_stderr}->($proc, $input);
+      }
+    ,
   );
 
   my $watcher_child;
@@ -238,18 +257,28 @@ sub run
     # cygwin
     while(!eof $child_stdout)
     {
-      my $input = <$child_stdout>;
-      last unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      $self->{on_stdout}->($proc,$input);
+      if($self->{raw})
+      { local $/; $self->{on_stdout}->($proc,<$child_stdout>) }
+      else
+      {
+        my $input = <$child_stdout>;
+        last unless defined $input;
+        $input =~ s/(\015?\012|\015)$//;
+        $self->{on_stdout}->($proc,$input);
+      }
     }
       
     while(!eof $child_stderr)
     {
-      my $input = <$child_stderr>;
-      last unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      $self->{on_stderr}->($proc,$input);
+      if($self->{raw})
+      { local $/; $self->{on_stderr}->($proc,<$child_stderr>) }
+      else
+      {
+        my $input = <$child_stderr>;
+        last unless defined $input;
+        $input =~ s/(\015?\012|\015)$//;
+        $self->{on_stderr}->($proc,$input);
+      }
     }
       
     $self->{on_exit}->($proc, $exit_value, $signal);

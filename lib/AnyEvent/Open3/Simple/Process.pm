@@ -49,7 +49,8 @@ sub print
 
 =head2 $proc-E<gt>say( @data )
 
-Write to the subprocess' stdin, adding a new line at the end.
+Write to the subprocess' stdin, adding a new line at the end.  This functionality
+is unsupported on Microsoft Windows.
 
 =cut
 
