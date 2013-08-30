@@ -218,7 +218,11 @@ L<AnyEvent::Subprocess>, L<AnyEvent::Util>, L<AnyEvent::Run>.
 
 =head1 AUTHOR
 
-Graham Ollis <plicease@cpan.org>
+author: Graham Ollis <plicease@cpan.org>
+
+contributors:
+
+Stephen R. Scaffidi
 
 =head1 COPYRIGHT AND LICENSE
 
