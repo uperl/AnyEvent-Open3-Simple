@@ -68,29 +68,47 @@ interfaces that may be more or less appropriate.
 
 =head1 CONSTRUCTOR
 
-Constructor takes a hash or hashref of event callbacks.
+Constructor takes a hash or hashref of event callbacks and attributes.
+Event callbacks have an C<on_> prefix, attributes do not.
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item * implementation
+
+The implementation to use for detecting process termination.  This should
+be one of C<child> or C<idle>.  On all platforms except for Microsoft
+Windows (but not Cygwin) the default is C<child>.
+
+You can change the default by setting the C<ANYEVENT_OPEN3_SIMPLE>
+environment variable, like this:
+
+ % export ANYEVENT_OPEN3_SIMPLE=idle
+
+=back
 
 =head2 EVENTS
 
 These events will be triggered by the subprocess when the run method is 
-called. Each event callback (except on_error) gets passed in an 
+called. Each event callback (except C<on_error>) gets passed in an 
 instance of L<AnyEvent::Open3::Simple::Process> as its first argument 
 which can be used to get the PID of the subprocess, or to write to it.  
-on_error does not get a process object because it indicates an error in 
+C<on_error> does not get a process object because it indicates an error in 
 the creation of the process.
 
 Not all of these events will fire depending on the execution of the 
-child process.  In the very least exactly one of on_start or on_error
+child process.  In the very least exactly one of C<on_start> or C<on_error>
 will be called.
 
 =over 4
 
-=item * on_start ($proc)
+=item * C<on_start> ($proc)
 
 Called after the process is created, but before the run method returns
 (that is, it does not wait to re-enter the event loop first).
 
-=item * on_error ($error)
+=item * C<on_error> ($error)
 
 Called when there is an execution error, for example, if you ask
 to run a program that does not exist.  No process is passed in
@@ -102,28 +120,34 @@ In some environments open3 is unable to detect exec errors in the
 child, so you may not be able to rely on this event.  It does 
 seem to work consistently on Perl 5.14 or better though.
 
-=item * on_stdout ($proc, $line)
+Different environments have different ways of handling it when
+you ask to run a program that doesn't exist.  On Linux and Cygwin,
+this will raise an C<on_error> event, on C<MSWin32> it will
+not trigger a C<on_error> and instead cause a normal exit
+with a exit value of 1.
+
+=item * C<on_stdout> ($proc, $line)
 
 Called on every line printed to stdout by the child process.
 
-=item * on_stderr ($proc, $line)
+=item * C<on_stderr> ($proc, $line)
 
 Called on every line printed to stderr by the child process.
 
-=item * on_exit ($proc, $exit_value, $signal)
+=item * C<on_exit> ($proc, $exit_value, $signal)
 
 Called when the processes completes, either because it called exit,
 or if it was killed by a signal.  
 
-=item * on_success ($proc)
+=item * C<on_success> ($proc)
 
 Called when the process returns zero exit value and is not terminated by a signal.
 
-=item * on_signal ($proc, $signal)
+=item * C<on_signal> ($proc, $signal)
 
 Called when the processes is terminated by a signal.
 
-=item * on_fail ($proc, $exit_value)
+=item * C<on_fail> ($proc, $exit_value)
 
 Called when the process returns a non-zero exit value.
 
@@ -154,7 +178,7 @@ sub new
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
-constructor (except for on_start) will not be called until
+constructor (except for C<on_start>) will not be called until
 the process re-enters the event loop.
 
 =cut
@@ -267,9 +291,16 @@ Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
 terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
 
-This module is not supported under Windows ($^O eq 'MSWin32'), but it 
-does seem to work under Cygwin ($^O eq 'cygwin').  Patches are welcome 
-for any platforms that don't work.
+This module uses an idle watcher instead of a child watcher to detect
+program termination on Microsoft Windows (but not Cygwin).  This is
+because the child watchers are unsupported by AnyEvent on Windows.
+The idle watcher implementation seems to pass the test suite, but there
+may be some traps for the unwary.  There may be other platforms or
+event loops where this is the appropriate choice, and you can use the
+C<ANYEVENT_OPEN3_SIMPLE> environment variable or the C<implementation>
+attribute to force it use an idel wather instead.  Patches for detecting
+environments where idle watchers should be used are welcome and
+encouraged.
 
 There are some traps for the unwary relating to buffers and deadlocks,
 L<IPC::Open3> is recommended reading.
