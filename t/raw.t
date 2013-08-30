@@ -9,7 +9,7 @@ use AnyEvent::Open3::Simple;
 use File::Spec;
 
 my $dir = tempdir( CLEANUP => 1);
-note "dir = $dir";
+#note "dir = $dir";
 open(my $fh, '>', File::Spec->catfile($dir, 'child.pl'));
 say $fh "#!$^X";
 say $fh '$| = 1;';
@@ -47,7 +47,7 @@ $done->recv;
 like $out, qr{^message1(\015?\012|\015)message2(\015?\012|\015)$}, "out";
 like $err, qr{^message3(\015?\012|\015)message4(\015?\012|\015)$}, "err";
 
-note "===out===";
-note $out;
-note "===err===";
-note $err;
+#note "===out===";
+#note $out;
+#note "===err===";
+#note $err;
