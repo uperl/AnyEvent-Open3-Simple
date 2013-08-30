@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
-
-use File::Temp qw( tempdir );
 use v5.10;
+BEGIN { eval q{ use EV } }
+use Test::More tests => 5;
+use File::Temp qw( tempdir );
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 use File::Spec;

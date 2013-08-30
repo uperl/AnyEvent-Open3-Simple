@@ -1,10 +1,10 @@
 use strict;
 use warnings;
+use v5.10;
+BEGIN { eval q{ use EV } }
 use Test::More $^O eq 'MSWin32' ? (skip_all => 'on_signal not supported on windows') : (tests => 6);
 use AnyEvent::Open3::Simple;
-
 use File::Temp qw( tempdir );
-use v5.10;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 use File::Spec;
