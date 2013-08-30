@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Test::More;
-
 use v5.10;
+BEGIN { eval q{ use EV } }
+use Test::More;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 use File::Temp qw( tempdir );
