@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.69      2013-08-29 21:58:23 -0400
   - added an alternate idle watcher implementation
   - added MSWin32 support (via idle watcher)
   - change end line processing

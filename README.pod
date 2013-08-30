@@ -6,7 +6,7 @@ AnyEvent::Open3::Simple - interface to open3 under AnyEvent
 
 =head1 VERSION
 
-version 0.68
+version 0.69
 
 =head1 SYNOPSIS
 
