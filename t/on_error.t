@@ -2,7 +2,11 @@ use strict;
 use warnings;
 use Test::More;
 
-if($^V >= v5.14)
+if($^O eq 'MSWin32')
+{
+  plan skip_all => 'open3 does not die on missing program on MSWin32';
+}
+elsif($^V >= v5.14)
 {
   plan tests => 2;
 }
@@ -31,6 +35,9 @@ my $ipc = AnyEvent::Open3::Simple->new(
     $done->send;
   },
   on_exit => sub {
+    my($proc, $exit, $sig) = @_;
+    note "exit = $exit";
+    note "sig  = $sig";
     $done->send;
   },
 );
