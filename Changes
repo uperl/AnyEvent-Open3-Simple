@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - added an alternate idle watcher implementation
+  - added MSWin32 support (via idle watcher)
   - change end line processing
     in the past we used chomp() which removed trailing $/
     but this didn't work nicely with MSWin32, instead we

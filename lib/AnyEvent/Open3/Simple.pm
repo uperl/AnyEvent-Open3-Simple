@@ -8,6 +8,7 @@ use IPC::Open3 qw( open3 );
 use Scalar::Util qw( reftype );
 use Symbol qw( gensym );
 use AnyEvent::Open3::Simple::Process;
+use Carp qw( croak );
 
 # ABSTRACT: interface to open3 under AnyEvent
 # VERSION
@@ -167,7 +168,7 @@ sub new
              // ($^O eq 'MSWin32' ? 'idle' : 'child');
   unless($self{impl} =~ /^(idle|child)$/)
   {
-    die "unknown implementation $self{impl}";
+    croak "unknown implementation $self{impl}";
   }
   bless \%self, $class;
 }
@@ -268,6 +269,9 @@ sub run
         use POSIX ":sys_wait_h";
         waitpid($pid, WNOHANG);
       };
+      # shouldn't be throwing an exception
+      # inside a callback, but then it 
+      # this should always work (?)
       die $@ if $@;
       $end_cb->($kid, $?) if $kid == $pid;
     });
@@ -301,6 +305,10 @@ C<ANYEVENT_OPEN3_SIMPLE> environment variable or the C<implementation>
 attribute to force it use an idel wather instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
+
+Writing to a subprocesses stdin via L<AnyEvent::Open3::Simple::Process>'s
+C<print> method is unsupported on Microsoft Windows (it does work under
+Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
 L<IPC::Open3> is recommended reading.

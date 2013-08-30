@@ -3,6 +3,7 @@ package AnyEvent::Open3::Simple::Process;
 use strict;
 use warnings;
 use v5.10;
+use Carp qw( croak );
 
 # ABSTRACT: process run using AnyEvent::Open3::Simple
 # VERSION
@@ -33,13 +34,16 @@ sub pid { shift->{pid} }
 
 =head2 $proc-E<gt>print( @data )
 
-Write to the subprocess' stdin.
+Write to the subprocess' stdin.  This functionality is unsupported on Microsoft
+Windows.
 
 =cut
 
 sub print
 {
   my $stdin = shift->{stdin};
+  croak "AnyEvent::Open3::Simple::Process#print is unsupported on this platform"
+    if $^O eq 'MSWin32';
   print $stdin @_;
 }
 
