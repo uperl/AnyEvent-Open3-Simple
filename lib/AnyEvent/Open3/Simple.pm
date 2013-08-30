@@ -302,7 +302,7 @@ The idle watcher implementation seems to pass the test suite, but there
 may be some traps for the unwary.  There may be other platforms or
 event loops where this is the appropriate choice, and you can use the
 C<ANYEVENT_OPEN3_SIMPLE> environment variable or the C<implementation>
-attribute to force it use an idel wather instead.  Patches for detecting
+attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
 

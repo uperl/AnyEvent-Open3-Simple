@@ -1,3 +1,5 @@
+=pod
+
 =head1 NAME
 
 AnyEvent::Open3::Simple - interface to open3 under AnyEvent
@@ -169,9 +171,13 @@ The idle watcher implementation seems to pass the test suite, but there
 may be some traps for the unwary.  There may be other platforms or
 event loops where this is the appropriate choice, and you can use the
 C<ANYEVENT_OPEN3_SIMPLE> environment variable or the C<implementation>
-attribute to force it use an idel wather instead.  Patches for detecting
+attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
+
+Writing to a subprocesses stdin via L<AnyEvent::Open3::Simple::Process>'s
+C<print> method is unsupported on Microsoft Windows (it does work under
+Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
 L<IPC::Open3> is recommended reading.
