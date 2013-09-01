@@ -7,7 +7,7 @@ if($^O eq 'MSWin32')
 {
   plan skip_all => 'open3 does not die on missing program on MSWin32';
 }
-elsif(eval q{ use 5.14; 1 })
+elsif(eval q{ use 5.14.0; 1 })
 {
   plan tests => 2;
 }
