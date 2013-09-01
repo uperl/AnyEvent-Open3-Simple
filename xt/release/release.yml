@@ -6,6 +6,7 @@ pod_spelling_system:
     - API
     - MSWin32
     - MSWin
+    - Scaffidi
 
 pod_coverage:
   private:
