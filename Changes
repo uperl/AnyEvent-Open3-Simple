@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.69_02   2013-09-01 14:25:50 -0400
   - add prereq EV on MSWin32
 
 0.69_01   2013-08-31 20:28:03 -0400
