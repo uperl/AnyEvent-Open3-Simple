@@ -8,6 +8,7 @@ diag '';
 diag '';
 diag "OS = $^O perl $^V";
 diag 'implementation = ' . AnyEvent::Open3::Simple->new->{impl};
+diag 'AnyEvent::detect = ' . AnyEvent::detect();
 diag '';
 diag '';
 

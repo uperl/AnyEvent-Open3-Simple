@@ -335,6 +335,11 @@ attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
 
+The pure perl implementation that comes with Perl
+(L<AnyEvent::Impl::Perl>) does not seem to work with this module
+on Microsoft Windows so I make L<EV> a prereq on that platform 
+(which does work).
+
 Writing to a subprocesses stdin via L<AnyEvent::Open3::Simple::Process>'s
 C<print> method is unsupported on Microsoft Windows (it does work under
 Cygwin though).

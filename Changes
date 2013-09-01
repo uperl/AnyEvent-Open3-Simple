@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - add prereq EV on MSWin32
   - added optional raw attribute to constructor
 
 0.69      2013-08-29 21:58:23 -0400
