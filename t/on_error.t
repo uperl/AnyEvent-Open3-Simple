@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use v5.10;
 BEGIN { eval q{ use EV } }
 use Test::More;
 
@@ -8,7 +7,7 @@ if($^O eq 'MSWin32')
 {
   plan skip_all => 'open3 does not die on missing program on MSWin32';
 }
-elsif($^V >= v5.14)
+elsif(eval q{ use 5.14; 1 })
 {
   plan tests => 2;
 }
@@ -17,7 +16,6 @@ else
   plan skip_all => 'test requires perl 5.14 or better';
 }
 
-use v5.10;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 use File::Temp qw( tempdir );

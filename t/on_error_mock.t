@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use v5.10;
 BEGIN { eval q{ use EV } }
 use Test::More tests => 2;
 
@@ -14,7 +13,6 @@ sub open3 { die "open3: this is an error" }
 
 package main;
 
-use v5.10;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 

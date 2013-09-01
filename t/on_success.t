@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use v5.10;
 BEGIN { eval q{ use EV } }
 use Test::More tests => 6;
 use AnyEvent::Open3::Simple;

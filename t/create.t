@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use v5.10;
 use Test::More tests => 2;
 use AnyEvent::Open3::Simple;
 use AnyEvent::Open3::Simple::Process;

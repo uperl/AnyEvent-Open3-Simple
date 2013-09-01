@@ -2,7 +2,6 @@ package AnyEvent::Open3::Simple;
 
 use strict;
 use warnings;
-use v5.10;
 use AnyEvent;
 use IPC::Open3 qw( open3 );
 use Scalar::Util qw( reftype );
@@ -164,15 +163,15 @@ Called when the process returns a non-zero exit value.
 
 sub new
 {
-  state $default_handler = sub { };
+  my $default_handler = sub { };
   my $class = shift;
-  my $args = (reftype($_[0]) // '') eq 'HASH' ? shift : { @_ };
+  my $args = (reftype($_[0]) || '') eq 'HASH' ? shift : { @_ };
   my %self;
-  $self{$_} = $args->{$_} // $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
+  $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   $self{impl} = $args->{implementation} 
-             // $ENV{ANYEVENT_OPEN3_SIMPLE}
-             // ($^O eq 'MSWin32' ? 'idle' : 'child');
-  $self{raw} = $args->{raw} // 0;
+             || $ENV{ANYEVENT_OPEN3_SIMPLE}
+             || ($^O eq 'MSWin32' ? 'idle' : 'child');
+  $self{raw} = $args->{raw} || 0;
   unless($self{impl} =~ /^(idle|child)$/)
   {
     croak "unknown implementation $self{impl}";

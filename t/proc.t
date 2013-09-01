@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use v5.10;
 BEGIN { eval q{ use EV } }
 use Test::More tests => 3;
 use AnyEvent::Open3::Simple;
@@ -27,7 +26,7 @@ my $ipc = AnyEvent::Open3::Simple->new(
   on_exit => sub {
     my($proc) = @_;
     $done->send;
-    $child_pid = eval { $proc->pid } // '';
+    $child_pid = eval { $proc->pid } || '';
     like $child_pid, qr/^\d+$/, "on_exit proc->pid = $child_pid";
     diag $@ if $@;
   },

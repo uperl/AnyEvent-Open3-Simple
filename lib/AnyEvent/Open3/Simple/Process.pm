@@ -2,7 +2,6 @@ package AnyEvent::Open3::Simple::Process;
 
 use strict;
 use warnings;
-use v5.10;
 use Carp qw( croak );
 
 # ABSTRACT: process run using AnyEvent::Open3::Simple
