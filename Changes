@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.71      2013-09-03 15:19:59 -0400
+  - fixed raw support
+
 0.70      2013-09-03 12:39:38 -0400
   - promote to production
 
