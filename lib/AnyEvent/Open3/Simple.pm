@@ -208,40 +208,66 @@ sub run
   my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
   
   $self->{on_start}->($proc);
-  
-  my $watcher_stdout = AnyEvent->io(
-    fh   => $child_stdout,
-    poll => 'r',
-    cb   => $self->{raw}
-    ? sub {
-        local $/;
-        $self->{on_stdout}->($proc, <$child_stdout>);
-      }
-    : sub {
+
+  my $watcher_stdout;
+  my $watcher_stderr;
+
+  if($self->{raw})
+  {
+
+    require AnyEvent::Handle;
+    $watcher_stdout = AnyEvent::Handle->new(
+      fh => $child_stdout,
+      on_error => sub {
+        $self->{on_stdout}->($proc,$_[0]{rbuf});
+      },
+    );
+    $watcher_stdout->on_read(sub {
+      $watcher_stdout->push_read(sub {
+        $DB::single = 1;
+        $self->{on_stdout}->($proc,$_[0]{rbuf});
+        $_[0]{rbuf} = '';
+      });
+    });
+    $watcher_stderr = AnyEvent::Handle->new(
+      fh => $child_stderr,
+      on_error => sub {
+        $self->{on_stderr}->($proc,$_[0]{rbuf});
+      },
+    );
+    $watcher_stderr->on_read(sub {
+      $watcher_stdout->push_read(sub {
+        $self->{on_stderr}->($proc,$_[0]{rbuf});
+        $_[0]{rbuf} = '';
+      });
+    });
+
+  }
+  else
+  {
+
+    $watcher_stdout = AnyEvent->io(
+      fh   => $child_stdout,
+      poll => 'r',
+      cb   => sub {
         my $input = <$child_stdout>;
         return unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
         $self->{on_stdout}->($proc, $input);
-      }
-    ,
-  );
+      },
+    );
 
-  my $watcher_stderr = AnyEvent->io(
-    fh   => $child_stderr,
-    poll => 'r',
-    cb   => $self->{raw}
-    ? sub {
-        local $/;
-        $self->{on_stderr}->($proc, <$child_stderr>);
-      }
-    : sub {
+    $watcher_stderr = AnyEvent->io(
+      fh   => $child_stderr,
+      poll => 'r',
+      cb   => sub {
         my $input = <$child_stderr>;
         return unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
         $self->{on_stderr}->($proc, $input);
-      }
-    ,
-  );
+      },
+    );
+  }
 
   my $watcher_child;
 
@@ -254,24 +280,23 @@ sub run
     # make sure we consume any stdout and stderr which hasn't
     # been consumed yet.  This seems to make on_out.t work on
     # cygwin
-    while(!eof $child_stdout)
+    if($self->{raw})
     {
-      if($self->{raw})
-      { local $/; $self->{on_stdout}->($proc,<$child_stdout>) }
-      else
+      local $/;
+      $self->{on_stdout}->($proc, scalar <$child_stdout>);
+      $self->{on_stderr}->($proc, scalar <$child_stderr>);
+    }
+    else
+    {
+      while(!eof $child_stdout)
       {
         my $input = <$child_stdout>;
         last unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
         $self->{on_stdout}->($proc,$input);
       }
-    }
       
-    while(!eof $child_stderr)
-    {
-      if($self->{raw})
-      { local $/; $self->{on_stderr}->($proc,<$child_stderr>) }
-      else
+      while(!eof $child_stderr)
       {
         my $input = <$child_stderr>;
         last unless defined $input;
