@@ -224,7 +224,6 @@ sub run
     );
     $watcher_stdout->on_read(sub {
       $watcher_stdout->push_read(sub {
-        $DB::single = 1;
         $self->{on_stdout}->($proc,$_[0]{rbuf});
         $_[0]{rbuf} = '';
       });
