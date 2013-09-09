@@ -8,6 +8,7 @@ pod_spelling_system:
     - MSWin
     - Scaffidi
     - prereq
+    - OpenBSD
 
 pod_coverage:
   private:

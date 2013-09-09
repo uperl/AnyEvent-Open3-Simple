@@ -88,7 +88,7 @@ environment variable, like this:
 
 =item * raw
 
-B<EXPERIMENTAL>: this doesn't seem to work right on openbsd, and until I
+B<EXPERIMENTAL>: this doesn't seem to work right on OpenBSD, and until I
 figure it out the interface and implementation for this option may change
 or go away.
 
