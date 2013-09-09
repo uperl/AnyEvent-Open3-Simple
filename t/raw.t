@@ -52,6 +52,7 @@ TODO: {
 
 if($^O eq 'openbsd')
 {
+  diag '';
   diag "===out===";
   diag $out;
   diag "===err===";
