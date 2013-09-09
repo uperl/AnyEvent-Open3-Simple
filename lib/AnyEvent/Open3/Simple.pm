@@ -257,7 +257,8 @@ sub run
         my $input = <$child_stdout>;
         return unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
-        $self->{on_stdout}->($proc, $input);
+        my $ref = $self->{on_stdout};
+        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
       },
     );
 
@@ -268,7 +269,8 @@ sub run
         my $input = <$child_stderr>;
         return unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
-        $self->{on_stderr}->($proc, $input);
+        my $ref = $self->{on_stderr};
+        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
       },
     );
   }
@@ -297,7 +299,8 @@ sub run
         my $input = <$child_stdout>;
         last unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
-        $self->{on_stdout}->($proc,$input);
+        my $ref = $self->{on_stdout};
+        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
       }
       
       while(!eof $child_stderr)
@@ -305,7 +308,8 @@ sub run
         my $input = <$child_stderr>;
         last unless defined $input;
         $input =~ s/(\015?\012|\015)$//;
-        $self->{on_stderr}->($proc,$input);
+        my $ref = $self->{on_stderr};
+        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
       }
     }
       

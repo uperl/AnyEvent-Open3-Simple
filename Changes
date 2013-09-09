@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
   - marking raw support as experiementalo
     https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
+  - undocumented (and experimental): on_stderr and on_stdout can be list ref
 
 0.71      2013-09-03 15:19:59 -0400
   - fixed raw support
