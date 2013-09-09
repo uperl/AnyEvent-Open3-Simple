@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.72      2013-09-09 08:20:35 -0400
   - marking raw support as experiementalo
     https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
   - undocumented (and experimental): on_stderr and on_stdout can be list ref
