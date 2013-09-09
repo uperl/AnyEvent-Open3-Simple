@@ -43,10 +43,18 @@ isa_ok $ret, 'AnyEvent::Open3::Simple';
 
 $done->recv;
 
-like $out, qr{^message1(\015?\012|\015)message2(\015?\012|\015)$}, "out";
-like $err, qr{^message3(\015?\012|\015)message4(\015?\012|\015)$}, "err";
+TODO: {
+  # https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
+  todo_skip "experimental", 2 if $^O eq 'openbsd';
+  like $out, qr{^message1(\015?\012|\015)message2(\015?\012|\015)$}, "out";
+  like $err, qr{^message3(\015?\012|\015)message4(\015?\012|\015)$}, "err";
+}
 
-#note "===out===";
-#note $out;
-#note "===err===";
-#note $err;
+if($^O eq 'openbsd')
+{
+  diag "===out===";
+  diag $out;
+  diag "===err===";
+  diag $err;
+}
+
