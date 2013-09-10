@@ -11,7 +11,7 @@ use File::Spec;
 my $dir = tempdir( CLEANUP => 1 );
 my $fh;
 open($fh, '>', File::Spec->catfile($dir, 'child.pl'));
-say $fh "#!$^X";
+print $fh "#!$^X\n";
 close $fh;
 
 my $done = AnyEvent->condvar;

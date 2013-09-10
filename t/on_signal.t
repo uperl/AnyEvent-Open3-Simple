@@ -12,12 +12,11 @@ my $dir = tempdir( CLEANUP => 1);
 do {
   my $fh;
   open($fh, '>', File::Spec->catfile($dir, 'child_sig9.pl'));
-  say $fh "#!$^X";
-  say $fh "kill 9, \$\$";
+  print $fh "#!$^X\nkill 9, \$\$\n";
   close $fh;
   
   open($fh, '>', File::Spec->catfile($dir, 'child_normal.pl'));
-  say $fh "#!$^X";
+  print $fh "#!$^X\n";
   close $fh;
 };
 

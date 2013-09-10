@@ -10,12 +10,12 @@ use File::Spec;
 my $dir = tempdir( CLEANUP => 1);
 #note "dir = $dir";
 open(my $fh, '>', File::Spec->catfile($dir, 'child.pl'));
-say $fh "#!$^X";
-say $fh '$| = 1;';
-say $fh 'print "message1\n";';
-say $fh 'print STDERR "message3\n";';
-say $fh 'print STDERR "message4\n";';
-say $fh 'print "message2\n";';
+print $fh join "\n", "#!$^X",
+                     '$| = 1;',
+                     'print "message1\n";',
+                     'print STDERR "message3\n";',
+                     'print STDERR "message4\n";',
+                     'print "message2\n";';
 close $fh;
 
 my $done = AnyEvent->condvar;
