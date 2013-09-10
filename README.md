@@ -10,7 +10,6 @@ interface to open3 under AnyEvent
     
     my $done = AnyEvent->condvar;
     
-
     my $ipc = AnyEvent::Open3::Simple->new(
       on_start => sub {
         my $proc = shift; # isa AnyEvent::Open3::Simple::Process
