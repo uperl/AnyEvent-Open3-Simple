@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - skip raw support testing on all platforms
 
 0.73      2013-09-10 14:08:24 -0400
   - perl 5.8 support fixes
