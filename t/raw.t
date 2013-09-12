@@ -45,17 +45,14 @@ $done->recv;
 
 TODO: {
   # https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
-  todo_skip "experimental", 2 if $^O eq 'openbsd';
+  todo_skip "experimental", 2;
   like $out, qr{^message1(\015?\012|\015)message2(\015?\012|\015)$}, "out";
   like $err, qr{^message3(\015?\012|\015)message4(\015?\012|\015)$}, "err";
 }
 
-if($^O eq 'openbsd')
-{
-  diag '';
-  diag "===out===";
-  diag $out;
-  diag "===err===";
-  diag $err;
-}
+diag '';
+diag "===out===";
+diag $out;
+diag "===err===";
+diag $err;
 
