@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.74      2013-09-12 06:10:50 -0400
   - skip raw support testing on all platforms
 
 0.73      2013-09-10 14:08:24 -0400

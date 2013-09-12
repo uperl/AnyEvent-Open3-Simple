@@ -74,16 +74,6 @@ Event callbacks have an `on_` prefix, attributes do not.
 
         % export ANYEVENT_OPEN3_SIMPLE=idle
 
-- raw
-
-    __EXPERIMENTAL__: this doesn't seem to work right on OpenBSD, and until I
-    figure it out the interface and implementation for this option may change
-    or go away.
-
-    If set to true (false is the default) then output will not be passed
-    into the `on_stdout` and `on_stderr` callbacks as lines, but instead
-    as chunks in whatever order they come.  New lines will not be stripped.
-
 ## EVENTS
 
 These events will be triggered by the subprocess when the run method is 
