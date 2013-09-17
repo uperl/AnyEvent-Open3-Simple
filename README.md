@@ -74,6 +74,20 @@ Event callbacks have an `on_` prefix, attributes do not.
 
         % export ANYEVENT_OPEN3_SIMPLE=idle
 
+- stdin
+
+    The input to be passed to the program.  This may be specified as a string,
+    in which case it will be passed directly to the program unmodified, or a
+    list, in which case it will be joined by new lines in whatever format is
+    native to your Perl.
+
+    Be careful to use either this `stdin` attribute or the `print`/`say` methods
+    on the [AnyEvent::Open3::Simple::Process](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple::Process) object for a given instance of
+    [AnyEvent::Open3::Simple](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple), but not both!  Otherwise bad things may happen.
+
+    Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
+    way to provide (standard) input to the subprocess.
+
 ## EVENTS
 
 These events will be triggered by the subprocess when the run method is 

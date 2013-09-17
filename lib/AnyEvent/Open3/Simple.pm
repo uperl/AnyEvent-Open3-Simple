@@ -87,6 +87,20 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
+=item * stdin
+
+The input to be passed to the program.  This may be specified as a string,
+in which case it will be passed directly to the program unmodified, or a
+list, in which case it will be joined by new lines in whatever format is
+native to your Perl.
+
+Be careful to use either this C<stdin> attribute or the C<print>/C<say> methods
+on the L<AnyEvent::Open3::Simple::Process> object for a given instance of
+L<AnyEvent::Open3::Simple>, but not both!  Otherwise bad things may happen.
+
+Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
+way to provide (standard) input to the subprocess.
+
 =back
 
 =head2 EVENTS
