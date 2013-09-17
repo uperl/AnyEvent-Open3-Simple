@@ -17,12 +17,12 @@ plan tests => 3;
 my $dir = tempdir( CLEANUP => 1 );
 my $fh;
 open($fh, '>', File::Spec->catfile($dir, 'child.pl'));
-say $fh "#!$^X";
-say $fh 'use File::Spec';
-say $fh "open(\$out, '>', File::Spec->catfile('$dir', 'child.out'));";
-say $fh 'while(<STDIN>) {';
-say $fh '  print $out $_';
-say $fh '}';
+print $fh join "\n", "#!$^X",
+                     'use File::Spec',
+                     "open(\$out, '>', File::Spec->catfile('$dir', 'child.out'));",
+                     'while(<STDIN>) {',
+                     '  print $out $_',
+                     '}';
 close $fh;
 
 my $done = AnyEvent->condvar;

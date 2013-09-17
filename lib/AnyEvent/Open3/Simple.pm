@@ -87,16 +87,6 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
-=item * raw
-
-B<EXPERIMENTAL>: this doesn't seem to work right on OpenBSD, and until I
-figure it out the interface and implementation for this option may change
-or go away.
-
-If set to true (false is the default) then output will not be passed
-into the C<on_stdout> and C<on_stderr> callbacks as lines, but instead
-as chunks in whatever order they come.  New lines will not be stripped.
-
 =back
 
 =head2 EVENTS

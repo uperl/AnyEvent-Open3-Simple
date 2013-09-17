@@ -10,12 +10,12 @@ use File::Spec;
 my $dir = tempdir( CLEANUP => 1);
 #note "dir = $dir";
 open(my $fh, '>', File::Spec->catfile($dir, 'child.pl'));
-say $fh "#!$^X";
-say $fh '$| = 1;';
-say $fh 'print "message1\n";';
-say $fh 'print STDERR "message3\n";';
-say $fh 'print STDERR "message4\n";';
-say $fh 'print "message2\n";';
+print $fh join "\n", "#!$^X",
+                     '$| = 1;',
+                     'print "message1\n";',
+                     'print STDERR "message3\n";',
+                     'print STDERR "message4\n";',
+                     'print "message2\n";';
 close $fh;
 
 my $done = AnyEvent->condvar;
@@ -45,17 +45,14 @@ $done->recv;
 
 TODO: {
   # https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
-  todo_skip "experimental", 2 if $^O eq 'openbsd';
+  todo_skip "experimental", 2;
   like $out, qr{^message1(\015?\012|\015)message2(\015?\012|\015)$}, "out";
   like $err, qr{^message3(\015?\012|\015)message4(\015?\012|\015)$}, "err";
 }
 
-if($^O eq 'openbsd')
-{
-  diag '';
-  diag "===out===";
-  diag $out;
-  diag "===err===";
-  diag $err;
-}
+diag '';
+diag "===out===";
+diag $out;
+diag "===err===";
+diag $err;
 
