@@ -8,6 +8,7 @@ use Scalar::Util qw( reftype );
 use Symbol qw( gensym );
 use AnyEvent::Open3::Simple::Process;
 use Carp qw( croak );
+use File::Temp ();
 
 # ABSTRACT: interface to open3 under AnyEvent
 # VERSION
@@ -172,6 +173,7 @@ sub new
   my $args = (reftype($_[0]) || '') eq 'HASH' ? shift : { @_ };
   my %self;
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
+  $self{stdin} = $args->{stdin};
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
              || ($^O eq 'MSWin32' ? 'idle' : 'child');
@@ -200,6 +202,21 @@ sub run
   
   my($child_stdin, $child_stdout, $child_stderr);
   $child_stderr = gensym;
+
+  local *TEMP;
+  if(defined $self->{stdin})
+  {
+    my $file = File::Temp->new;
+    $file->autoflush(1);
+    $file->print(
+      ref($self->{stdin}) eq 'ARRAY'
+      ? join("\n", @{ $self->{stdin} })
+      : $self->{stdin}
+    );
+    $file->seek(0,0);
+    open TEMP, '<&=', $file;
+    $child_stdin = '<&TEMP';
+  }
   
   my $pid = eval { open3 $child_stdin, $child_stdout, $child_stderr, $program, @arguments };
   
