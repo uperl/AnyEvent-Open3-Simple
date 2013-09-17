@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - add stdin attribute for AnyEvent::Open::Simple
 
 0.74      2013-09-12 06:10:50 -0400
   - skip raw support testing on all platforms
