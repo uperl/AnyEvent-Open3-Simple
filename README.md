@@ -47,12 +47,12 @@ interface to open3 under AnyEvent
 
 This module provides an interface to open3 while running under AnyEvent
 that delivers data from stdout and stderr as lines are written by the
-subprocess.  The interface is reminiscent of [IPC::Open3::Simple](http://search.cpan.org/perldoc?IPC::Open3::Simple), 
+subprocess.  The interface is reminiscent of [IPC::Open3::Simple](https://metacpan.org/pod/IPC::Open3::Simple), 
 although this module does provides a somewhat different API, so it
 cannot be used a drop in replacement for that module.
 
 There are already a number of interfaces for interacting with subprocesses
-in the context of [AnyEvent](http://search.cpan.org/perldoc?AnyEvent), but this one is the most convenient for my
+in the context of [AnyEvent](https://metacpan.org/pod/AnyEvent), but this one is the most convenient for my
 usage.  Note the modules listed in the SEE ALSO section below for other 
 interfaces that may be more or less appropriate.
 
@@ -82,8 +82,8 @@ Event callbacks have an `on_` prefix, attributes do not.
     native to your Perl.
 
     Be careful to use either this `stdin` attribute or the `print`/`say` methods
-    on the [AnyEvent::Open3::Simple::Process](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple::Process) object for a given instance of
-    [AnyEvent::Open3::Simple](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple), but not both!  Otherwise bad things may happen.
+    on the [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process) object for a given instance of
+    [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple), but not both!  Otherwise bad things may happen.
 
     Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
     way to provide (standard) input to the subprocess.
@@ -92,7 +92,7 @@ Event callbacks have an `on_` prefix, attributes do not.
 
 These events will be triggered by the subprocess when the run method is 
 called. Each event callback (except `on_error`) gets passed in an 
-instance of [AnyEvent::Open3::Simple::Process](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple::Process) as its first argument 
+instance of [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process) as its first argument 
 which can be used to get the PID of the subprocess, or to write to it.  
 `on_error` does not get a process object because it indicates an error in 
 the creation of the process.
@@ -111,7 +111,7 @@ will be called.
     Called when there is an execution error, for example, if you ask
     to run a program that does not exist.  No process is passed in
     because the process failed to create.  The error passed in is 
-    the error thrown by [IPC::Open3](http://search.cpan.org/perldoc?IPC::Open3) (typically a string which begins
+    the error thrown by [IPC::Open3](https://metacpan.org/pod/IPC::Open3) (typically a string which begins
     with "open3: ...").
 
     In some environments open3 is unable to detect exec errors in the
@@ -162,7 +162,7 @@ the process re-enters the event loop.
 
 Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to 
-terminate.  See ["CHILD-PROCESS-WATCHERS" in AnyEvent](http://search.cpan.org/perldoc?AnyEvent#CHILD-PROCESS-WATCHERS) for details.
+terminate.  See ["CHILD-PROCESS-WATCHERS" in AnyEvent](https://metacpan.org/pod/AnyEvent#CHILD-PROCESS-WATCHERS) for details.
 
 This module uses an idle watcher instead of a child watcher to detect
 program termination on Microsoft Windows (but not Cygwin).  This is
@@ -176,16 +176,16 @@ environments where idle watchers should be used are welcome and
 encouraged.
 
 The pure perl implementation that comes with Perl
-([AnyEvent::Impl::Perl](http://search.cpan.org/perldoc?AnyEvent::Impl::Perl)) does not seem to work with this module
-on Microsoft Windows so I make [EV](http://search.cpan.org/perldoc?EV) a prereq on that platform 
+([AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl)) does not seem to work with this module
+on Microsoft Windows so I make [EV](https://metacpan.org/pod/EV) a prereq on that platform 
 (which does work).
 
-Writing to a subprocesses stdin via [AnyEvent::Open3::Simple::Process](http://search.cpan.org/perldoc?AnyEvent::Open3::Simple::Process)'s
+Writing to a subprocesses stdin via [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process)'s
 `print` method is unsupported on Microsoft Windows (it does work under
 Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
-[IPC::Open3](http://search.cpan.org/perldoc?IPC::Open3) is recommended reading.
+[IPC::Open3](https://metacpan.org/pod/IPC::Open3) is recommended reading.
 
 If you register a call back for `on_exit`, but not `on_error` then
 use a condition variable to wait for the process to complete as in
@@ -219,7 +219,7 @@ if the exception isn't caught somewhere else.
 
 # SEE ALSO
 
-[AnyEvent::Subprocess](http://search.cpan.org/perldoc?AnyEvent::Subprocess), [AnyEvent::Util](http://search.cpan.org/perldoc?AnyEvent::Util), [AnyEvent::Run](http://search.cpan.org/perldoc?AnyEvent::Run).
+[AnyEvent::Subprocess](https://metacpan.org/pod/AnyEvent::Subprocess), [AnyEvent::Util](https://metacpan.org/pod/AnyEvent::Util), [AnyEvent::Run](https://metacpan.org/pod/AnyEvent::Run).
 
 # AUTHOR
 
