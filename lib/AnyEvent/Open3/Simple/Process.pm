@@ -21,7 +21,9 @@ sub new
 
 =head1 ATTRIBUTES
 
-=head2 $proc-E<gt>pid
+=head2 pid
+
+ my $pid = $proc->pid;
 
 Return the Process ID of the child process.
 
@@ -31,7 +33,9 @@ sub pid { shift->{pid} }
 
 =head1 METHODS
 
-=head2 $proc-E<gt>print( @data )
+=head2 print
+
+ $proc->print(@data);
 
 Write to the subprocess' stdin.
 
@@ -53,7 +57,9 @@ sub print
   print $stdin @_;
 }
 
-=head2 $proc-E<gt>say( @data )
+=head2 say
+
+ $proc->say(@data);
 
 Write to the subprocess' stdin, adding a new line at the end.  This functionality
 is unsupported on Microsoft Windows.

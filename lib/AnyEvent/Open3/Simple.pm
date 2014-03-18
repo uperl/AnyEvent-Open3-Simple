@@ -2,6 +2,7 @@ package AnyEvent::Open3::Simple;
 
 use strict;
 use warnings;
+use warnings::register;
 use AnyEvent;
 use IPC::Open3 qw( open3 );
 use Scalar::Util qw( reftype );
@@ -87,19 +88,21 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
-=item * stdin
+=item * stdin (DEPRECATED)
 
-The input to be passed to the program.  This may be specified as a string,
-in which case it will be passed directly to the program unmodified, or a
-list, in which case it will be joined by new lines in whatever format is
-native to your Perl.
+Deprecated attribute for passing the entire content of stdin to the subprocess.
+This attribute may be removed from a future version of L<AnyEvent::Open3::Simple>
+(but not before 18 March 2015).  Instead use one of
 
-Be careful to use either this C<stdin> attribute or the C<print>/C<say> methods
-on the L<AnyEvent::Open3::Simple::Process> object for a given instance of
-L<AnyEvent::Open3::Simple>, but not both!  Otherwise bad things may happen.
+=over 4
 
-Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
-way to provide (standard) input to the subprocess.
+=item L<AnyEvent::Open3::Simple::Process#print>
+
+=item L<AnyEvent::Open3::Simple::Process#say>
+
+=item L<AnyEvent::Open3::Simple#run>
+
+=back
 
 =back
 
@@ -177,7 +180,11 @@ sub new
   my $args = (reftype($_[0]) || '') eq 'HASH' ? shift : { @_ };
   my %self;
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
-  $self{stdin} = $args->{stdin};
+  if($args->{stdin})
+  {
+    warnings::warnif('deprecated', "passing stdin to the constructor of AnyEvent::Open3::Simple is deprecated");
+    $self{stdin} = ref $args->{stdin} ? $args->{stdin} : \$args->{stdin};
+  }
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
              || ($^O eq 'MSWin32' ? 'idle' : 'child');
@@ -188,12 +195,28 @@ sub new
 
 =head1 METHODS
 
-=head2 $ipc-E<gt>run($program, @arguments)
+=head2 run
+
+ $ipc->run($program, @arguments);
+ $ipc->run($program, @arguments, \$stdin);
+ $ipc->run($program, @arguments, \@stdin);
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
 constructor (except for C<on_start>) will not be called until
 the process re-enters the event loop.
+
+You may optionally provide the full content of standard input
+as a string reference or list reference as the last argument.
+If provided as a list reference, it will be joined by new lines
+in whatever format is native to your Perl.
+
+Do not mix the use of passing standard input to L<AnyEvent::Open3::Simple#run>
+and L<AnyEvent::Open3::Simple::Process#print> or L<AnyEvent::Open3::Simple::Process#say>,
+otherwise bad things may happen.
+
+Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
+way to provide standard input to the subprocess.
 
 =cut
 
@@ -202,20 +225,23 @@ sub run
   croak "run method requires at least one argument"
     unless @_ >= 2;
 
+  my $stdin = $_[0]->{stdin};
+  $stdin = pop if ref $_[-1];
+
   my($self, $program, @arguments) = @_;
   
   my($child_stdin, $child_stdout, $child_stderr);
   $child_stderr = gensym;
 
   local *TEMP;
-  if(defined $self->{stdin})
+  if(defined $stdin)
   {
     my $file = File::Temp->new;
     $file->autoflush(1);
     $file->print(
-      ref($self->{stdin}) eq 'ARRAY'
-      ? join("\n", @{ $self->{stdin} })
-      : $self->{stdin}
+      ref($stdin) eq 'ARRAY'
+      ? join("\n", @{ $stdin })
+      : $$stdin
     );
     $file->seek(0,0);
     open TEMP, '<&=', $file;
@@ -393,9 +419,9 @@ The pure perl implementation that comes with Perl
 on Microsoft Windows so I make L<EV> a prereq on that platform 
 (which does work).
 
-Writing to a subprocesses stdin via L<AnyEvent::Open3::Simple::Process>'s
-C<print> method is unsupported on Microsoft Windows (it does work under
-Cygwin though).
+Writing to a subprocesses stdin with L<AnyEvent::Open3::Simple::Process#print>
+or L<AnyEvent::Open3::Simple::Process#say> is unsupported on Microsoft 
+Windows (it does work under Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
 L<IPC::Open3> is recommended reading.

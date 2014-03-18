@@ -74,19 +74,15 @@ Event callbacks have an `on_` prefix, attributes do not.
 
         % export ANYEVENT_OPEN3_SIMPLE=idle
 
-- stdin
+- stdin (DEPRECATED)
 
-    The input to be passed to the program.  This may be specified as a string,
-    in which case it will be passed directly to the program unmodified, or a
-    list, in which case it will be joined by new lines in whatever format is
-    native to your Perl.
+    Deprecated attribute for passing the entire content of stdin to the subprocess.
+    This attribute may be removed from a future version of [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple)
+    (but not before 18 March 2015).  Instead use one of
 
-    Be careful to use either this `stdin` attribute or the `print`/`say` methods
-    on the [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process) object for a given instance of
-    [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple), but not both!  Otherwise bad things may happen.
-
-    Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
-    way to provide (standard) input to the subprocess.
+    - [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
+    - [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say)
+    - [AnyEvent::Open3::Simple#run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
 
 ## EVENTS
 
@@ -151,12 +147,28 @@ will be called.
 
 # METHODS
 
-## $ipc->run($program, @arguments)
+## run
+
+    $ipc->run($program, @arguments);
+    $ipc->run($program, @arguments, \$stdin);
+    $ipc->run($program, @arguments, \@stdin);
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
 constructor (except for `on_start`) will not be called until
 the process re-enters the event loop.
+
+You may optionally provide the full content of standard input
+as a string reference or list reference as the last argument.
+If provided as a list reference, it will be joined by new lines
+in whatever format is native to your Perl.
+
+Do not mix the use of passing standard input to [AnyEvent::Open3::Simple#run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
+and [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print) or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say),
+otherwise bad things may happen.
+
+Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
+way to provide standard input to the subprocess.
 
 # CAVEATS
 
@@ -180,9 +192,9 @@ The pure perl implementation that comes with Perl
 on Microsoft Windows so I make [EV](https://metacpan.org/pod/EV) a prereq on that platform 
 (which does work).
 
-Writing to a subprocesses stdin via [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process)'s
-`print` method is unsupported on Microsoft Windows (it does work under
-Cygwin though).
+Writing to a subprocesses stdin with [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
+or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft 
+Windows (it does work under Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
 [IPC::Open3](https://metacpan.org/pod/IPC::Open3) is recommended reading.

@@ -1,7 +1,8 @@
 use strict;
 use warnings;
+no warnings 'deprecated';
 BEGIN { eval q{ use EV } }
-use Test::More tests => 2;
+use Test::More tests => 4;
 use AnyEvent;
 use AnyEvent::Open3::Simple;
 use File::Temp qw( tempdir );
@@ -20,29 +21,29 @@ close $fh;
 
 foreach my $stdin ([ qw( message1 message2 ) ], join("\n", qw( message1 message2 )))
 {
-  foreach my $phase (qw( constructor ))
+  foreach my $phase (qw( constructor run ))
   {
     subtest "phase[$phase] stdin[$stdin]" => sub {
-      plan tests => 3;
+      plan tests => 4;
   
       my $done = AnyEvent->condvar;
 
       my $ipc = AnyEvent::Open3::Simple->new(
         on_exit => sub {
-          $done->send;
+          $done->send(1);
         },
-        stdin => $stdin,
+        $phase eq 'constructor' ? (stdin => $stdin) : (),
       );
 
       my $timeout = AnyEvent->timer(
         after => 5,
-        cb    => sub { diag 'timeout!'; exit 2 },
+        cb    => sub { diag 'timeout!'; $done->send(0) },
       );
 
-      my $proc = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'));
+      my $proc = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'), $phase eq 'run' ? (ref $stdin ? $stdin : \$stdin) : ());
       isa_ok $proc, 'AnyEvent::Open3::Simple';
 
-      $done->recv;
+      is $done->recv, 1, 'no timeout';
 
       open($fh, '<', File::Spec->catfile($dir, 'child.out'));
       my @list = <$fh>;
