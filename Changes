@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.76      2014-03-18 12:04:18 -0400
   - add stdin attribute for AnyEvent::Open::Simple
 
 0.74      2013-09-12 06:10:50 -0400
