@@ -209,14 +209,14 @@ the process re-enters the event loop.
 You may optionally provide the full content of standard input
 as a string reference or list reference as the last argument.
 If provided as a list reference, it will be joined by new lines
-in whatever format is native to your Perl.
+in whatever format is native to your Perl.  Currently on 
+(non cygwin) Windows (Strawberry, ActiveState) this is the only
+way to provide standard input to the subprocess.
 
-Do not mix the use of passing standard input to L<AnyEvent::Open3::Simple#run>
+Do not mix the use of passing standard input to L<run|AnyEvent::Open3::Simple#run>
 and L<AnyEvent::Open3::Simple::Process#print> or L<AnyEvent::Open3::Simple::Process#say>,
 otherwise bad things may happen.
 
-Currently on (non cygwin) Windows (Strawberry, ActiveState) this is the only
-way to provide standard input to the subprocess.
 
 =cut
 
