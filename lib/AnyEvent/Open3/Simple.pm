@@ -199,6 +199,9 @@ the process re-enters the event loop.
 
 sub run
 {
+  croak "run method requires at least one argument"
+    unless @_ >= 2;
+
   my($self, $program, @arguments) = @_;
   
   my($child_stdin, $child_stdout, $child_stderr);
