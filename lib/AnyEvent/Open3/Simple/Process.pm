@@ -79,7 +79,9 @@ sub say
   shift->print(@_, "\n");
 }
 
-=head2 $proc-E<gt>close
+=head2 close
+
+ $proc->close
 
 Close the subprocess' stdin.
 
