@@ -182,10 +182,7 @@ sub new
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
              || ($^O eq 'MSWin32' ? 'idle' : 'child');
   $self{raw} = $args->{raw} || 0;
-  unless($self{impl} =~ /^(idle|child)$/)
-  {
-    croak "unknown implementation $self{impl}";
-  }
+  croak "unknown implementation $self{impl}" unless $self{impl} =~ /^(idle|child)$/;
   bless \%self, $class;
 }
 
