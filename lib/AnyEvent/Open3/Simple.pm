@@ -25,6 +25,8 @@ use File::Temp ();
  my $ipc = AnyEvent::Open3::Simple->new(
    on_start => sub {
      my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+     my $program = shift;    # string
+     my @args = @_;          # list of arguments
      say 'child PID: ', $proc->pid;
    },
    on_stdout => sub { 
@@ -123,10 +125,14 @@ will be called.
 
 =over 4
 
-=item * C<on_start> ($proc)
+=item * C<on_start> ($proc, $program, @arguments)
 
 Called after the process is created, but before the run method returns
 (that is, it does not wait to re-enter the event loop first).
+
+In versions 0.78 and better, this event also gets the program name
+and arguments passed into the L<run|AnyEvent::Open3::Simple#run>
+method.
 
 =item * C<on_error> ($error, $program, @arguments)
 
@@ -264,7 +270,7 @@ sub run
   
   my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
   
-  $self->{on_start}->($proc);
+  $self->{on_start}->($proc, $program, @arguments);
 
   my $watcher_stdout;
   my $watcher_stderr;
