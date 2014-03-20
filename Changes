@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.78      2014-03-20 18:15:47 -0400
   - on_start event now gets program and arguments passed to the run method
 
 0.77      2014-03-20 17:55:47 -0400

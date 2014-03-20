@@ -13,6 +13,8 @@ interface to open3 under AnyEvent
     my $ipc = AnyEvent::Open3::Simple->new(
       on_start => sub {
         my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+        my $program = shift;    # string
+        my @args = @_;          # list of arguments
         say 'child PID: ', $proc->pid;
       },
       on_stdout => sub { 
@@ -99,10 +101,14 @@ Not all of these events will fire depending on the execution of the
 child process.  In the very least exactly one of `on_start` or `on_error`
 will be called.
 
-- `on_start` ($proc)
+- `on_start` ($proc, $program, @arguments)
 
     Called after the process is created, but before the run method returns
     (that is, it does not wait to re-enter the event loop first).
+
+    In versions 0.78 and better, this event also gets the program name
+    and arguments passed into the [run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
+    method.
 
 - `on_error` ($error, $program, @arguments)
 
