@@ -9,7 +9,7 @@ if($^O eq 'MSWin32')
 }
 elsif(eval q{ use 5.14.0; 1 })
 {
-  plan tests => 2;
+  plan tests => 4;
 }
 else
 {
@@ -27,10 +27,12 @@ my $done = AnyEvent->condvar;
 
 my $called_on_error = 0;
 my $message = '';
+my $cmd;
+my @args;
 
 my $ipc = AnyEvent::Open3::Simple->new(
   on_error => sub {
-    $message = shift;
+    ($message, $cmd, @args) = @_;
     $called_on_error = 1;
     $done->send;
   },
@@ -42,10 +44,13 @@ my $ipc = AnyEvent::Open3::Simple->new(
   },
 );
 
-$ipc->run(File::Spec->catfile($dir, 'bogus.pl'));
+$ipc->run(File::Spec->catfile($dir, 'bogus.pl'), 'arg1', 'arg2');
 
 $done->recv;
 
 is $called_on_error, 1, 'called on_error';
 chomp $message;
 like $message, qr/^open3: /, "message = $message";
+
+is $cmd, File::Spec->catfile($dir, 'bogus.pl'), 'cmd';
+is_deeply \@args, [qw( arg1 arg2 )], 'args';
