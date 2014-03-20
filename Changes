@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.77      2014-03-20 17:55:47 -0400
   - on_error event now gets program and arguments passed to the run method
   - add user attribute on AnyEvent::Open3::Simple::Process
 

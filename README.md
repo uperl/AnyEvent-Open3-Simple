@@ -12,17 +12,17 @@ interface to open3 under AnyEvent
     
     my $ipc = AnyEvent::Open3::Simple->new(
       on_start => sub {
-        my $proc = shift; # isa AnyEvent::Open3::Simple::Process
+        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
         say 'child PID: ', $proc->pid;
       },
       on_stdout => sub { 
-        my $proc = shift; # isa AnyEvent::Open3::Simple::Process
-        my $line = shift; # string
+        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+        my $line = shift;       # string
         say 'out: ', $string;
       },
       on_stderr => sub {
-        my $proc = shift; # isa AnyEvent::Open3::Simple::Process
-        my $line = shift; # string
+        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+        my $line = shift;       # string
         say 'err: ', $line;
       },
       on_exit   => sub {
@@ -35,6 +35,8 @@ interface to open3 under AnyEvent
       },
       on_error => sub {
         my $error = shift;      # the exception thrown by IPC::Open3::open3
+        my $program = shift;    # string
+        my @args = @_;          # list of arguments
         warn "error: $error";
         $done->send;
       },
@@ -102,7 +104,7 @@ will be called.
     Called after the process is created, but before the run method returns
     (that is, it does not wait to re-enter the event loop first).
 
-- `on_error` ($error)
+- `on_error` ($error, $program, @arguments)
 
     Called when there is an execution error, for example, if you ask
     to run a program that does not exist.  No process is passed in
@@ -119,6 +121,10 @@ will be called.
     this will raise an `on_error` event, on `MSWin32` it will
     not trigger a `on_error` and instead cause a normal exit
     with a exit value of 1.
+
+    In versions 0.77 and better, this event also gets the program name
+    and arguments passed into the [run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
+    method.
 
 - `on_stdout` ($proc, $line)
 
