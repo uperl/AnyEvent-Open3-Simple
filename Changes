@@ -2,6 +2,7 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
   - on_error event now gets program and arguments passed to the run method
+  - add user attribute on AnyEvent::Open3::Simple::Process
 
 0.76      2014-03-18 12:04:18 -0400
   - deprecate stdin attribute for AnyEvent::Open3::Simple

@@ -16,7 +16,7 @@ This class represents a process being handled by L<AnyEvent::Open3::Simple>.
 sub new
 {
   my($class, $pid, $stdin) = @_;
-  bless { pid => $pid, stdin => $stdin }, $class;
+  bless { pid => $pid, stdin => $stdin, user => '' }, $class;
 }
 
 =head1 ATTRIBUTES
@@ -90,6 +90,37 @@ Close the subprocess' stdin.
 sub close
 {
   CORE::close(shift->{stdin});
+}
+
+=head2 user
+
+Version 0.77
+
+ $proc->user($user_data);
+ my $user_data = $proc->user;
+
+Get or set user defined data tied to the process object.  Any
+Perl data structure may be used.  Useful for persisting data 
+between callbacks, for example:
+
+ AnyEvent::Open3::Simple->new(
+   on_start => sub {
+     my($proc) = @_;
+     $proc->user({ message => 'hello there' });
+   },
+   on_stdout => sub {
+     my($proc) = @_;
+     say $proc->user->{message};
+   },
+ );
+
+=cut
+
+sub user
+{
+  my($self, $data) = @_;
+  $self->{user} = $data if defined $data;
+  $self->{user};
 }
 
 1;

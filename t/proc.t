@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 BEGIN { eval q{ use EV } }
-use Test::More tests => 3;
+use Test::More tests => 5;
 use AnyEvent::Open3::Simple;
 use File::Temp qw( tempdir );
 use AnyEvent;
@@ -19,6 +19,8 @@ my $done = AnyEvent->condvar;
 my $child_pid;
 my $proc;
 
+my $old_user;
+
 my $ipc = AnyEvent::Open3::Simple->new(
   on_start => sub {
     ($proc) = @_;
@@ -28,6 +30,10 @@ my $ipc = AnyEvent::Open3::Simple->new(
     $done->send;
     $child_pid = eval { $proc->pid } || '';
     like $child_pid, qr/^\d+$/, "on_exit proc->pid = $child_pid";
+    diag $@ if $@;
+    $old_user = eval { $proc->user };
+    diag $@ if $@;
+    eval { $proc->user('some user data') };
     diag $@ if $@;
   },
 );
@@ -44,3 +50,9 @@ $done->recv;
 
 is eval { $proc->pid }, $child_pid, "both procs have same pid";
 diag $@ if $@;
+
+my $new_user = eval { $proc->user };
+diag $@ if $@;
+
+is $old_user, '', 'old user';
+is $new_user, 'some user data', 'new user';
