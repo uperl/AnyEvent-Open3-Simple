@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - migrate from MakeMaker to Module::Build
 
 0.78      2014-03-20 18:15:47 -0400
   - on_start event now gets program and arguments passed to the run method
