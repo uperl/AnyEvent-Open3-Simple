@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp qw( croak );
 
-# ABSTRACT: process run using AnyEvent::Open3::Simple
+# ABSTRACT: Process run using AnyEvent::Open3::Simple
 # VERSION
 
 =head1 DESCRIPTION

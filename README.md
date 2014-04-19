@@ -1,6 +1,6 @@
 # AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple)
 
-interface to open3 under AnyEvent
+Interface to open3 under AnyEvent
 
 # SYNOPSIS
 

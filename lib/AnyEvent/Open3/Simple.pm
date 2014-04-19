@@ -11,7 +11,7 @@ use AnyEvent::Open3::Simple::Process;
 use Carp qw( croak );
 use File::Temp ();
 
-# ABSTRACT: interface to open3 under AnyEvent
+# ABSTRACT: Interface to open3 under AnyEvent
 # VERSION
 
 =head1 SYNOPSIS
