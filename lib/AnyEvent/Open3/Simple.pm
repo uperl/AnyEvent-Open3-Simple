@@ -337,7 +337,8 @@ sub run
   my $watcher_child;
 
   my $end_cb = sub {
-    my($pid, $status) = @_;
+    #my($pid, $status) = @_;
+    my $status = $_[1];
     my($exit_value, $signal) = ($status >> 8, $status & 127);
       
     $proc->close;
