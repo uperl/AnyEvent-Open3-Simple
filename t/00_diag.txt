@@ -1,4 +1,4 @@
 AnyEvent
 EV
-ExtUtils::MakeMaker
+Module::Build
 warnings::register
