@@ -1,6 +1,7 @@
 language: perl
 install:
   - cpanm -n AnyEvent
+  - perlbrew list
 script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
 perl:
   - "5.19"
