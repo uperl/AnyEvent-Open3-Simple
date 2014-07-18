@@ -210,12 +210,10 @@ sub new
 =head2 run
 
  $ipc->run($program, @arguments);
- $ipc->run($program, @arguments, \$stdin);
- $ipc->run($program, @arguments, \@stdin);
-
-Version 0.80
-
- $ipc->run($program, @arguments, \$stdin, sub {...});
+ $ipc->run($program, @arguments, \$stdin);             # (version 0.76)
+ $ipc->run($program, @arguments, \@stdin);             # (version 0.76)
+ $ipc->run($program, @arguments, sub {...});           # (version 0.80)
+ $ipc->run($program, @arguments, \$stdin, sub {...});  # (version 0.80)
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
@@ -223,7 +221,8 @@ constructor (except for C<on_start>) will not be called until
 the process re-enters the event loop.
 
 You may optionally provide the full content of standard input
-as a string reference or list reference as the last argument.
+as a string reference or list reference as the last argument
+(or second to last if you are providing a callback below).
 If provided as a list reference, it will be joined by new lines
 in whatever format is native to your Perl.  Currently on 
 (non cygwin) Windows (Strawberry, ActiveState) this is the only
@@ -233,15 +232,19 @@ Do not mix the use of passing standard input to L<run|AnyEvent::Open3::Simple#ru
 and L<AnyEvent::Open3::Simple::Process#print> or L<AnyEvent::Open3::Simple::Process#say>,
 otherwise bad things may happen.
 
-Version 0.80
+In version 0.80 or better, you may provide a callback as the last argument
+which is called before C<on_start>, and takes the process object as its only 
+argument.  For example:
 
-You may optionally provide a subroutine reference which accepts the
-C<$pid> of the new process and which returns a scalar or reference
-that will be passed to C<$proc->user()>:
+ foreach my $i (1..10)
+ {
+   $ipc->run($prog, @args, \$stdin, sub {
+     my($proc) = @_;
+     $proc->user({ iteration => $i });
+   });
+ }
 
-    $ipc->run($prog, @args, \$stdin, sub { return { pid => shift } });
-
-This is useful for making data accessible to the sub-process that may
+This is useful for making data accessible to C<$ipc> object's callbacks that may
 be out of scope otherwise.
 
 =cut
@@ -285,7 +288,7 @@ sub run
   }
   
   my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
-  $proc->user($proc_user->($pid));
+  $proc_user->($proc);
 
   $self->{on_start}->($proc, $program, @arguments);
 

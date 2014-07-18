@@ -162,8 +162,10 @@ will be called.
 ## run
 
     $ipc->run($program, @arguments);
-    $ipc->run($program, @arguments, \$stdin);
-    $ipc->run($program, @arguments, \@stdin);
+    $ipc->run($program, @arguments, \$stdin);             # (version 0.76)
+    $ipc->run($program, @arguments, \@stdin);             # (version 0.76)
+    $ipc->run($program, @arguments, sub {...});           # (version 0.80)
+    $ipc->run($program, @arguments, \$stdin, sub {...});  # (version 0.80)
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
@@ -171,7 +173,8 @@ constructor (except for `on_start`) will not be called until
 the process re-enters the event loop.
 
 You may optionally provide the full content of standard input
-as a string reference or list reference as the last argument.
+as a string reference or list reference as the last argument
+(or second to last if you are providing a callback below).
 If provided as a list reference, it will be joined by new lines
 in whatever format is native to your Perl.  Currently on 
 (non cygwin) Windows (Strawberry, ActiveState) this is the only
@@ -180,6 +183,21 @@ way to provide standard input to the subprocess.
 Do not mix the use of passing standard input to [run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
 and [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print) or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say),
 otherwise bad things may happen.
+
+In version 0.80 or better, you may provide a callback as the last argument
+which is called before `on_start`, and takes the process object as its only 
+argument.  For example:
+
+    foreach my $i (1..10)
+    {
+      $ipc->run($prog, @args, \$stdin, sub {
+        my($proc) = @_;
+        $proc->user({ iteration => $i });
+      });
+    }
+
+This is useful for making data accessible to `$ipc` object's callbacks that may
+be out of scope otherwise.
 
 # CAVEATS
 
