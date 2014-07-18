@@ -2,7 +2,6 @@ package AnyEvent::Open3::Simple::Process;
 
 use strict;
 use warnings;
-use Carp qw( croak );
 
 # ABSTRACT: Process run using AnyEvent::Open3::Simple
 # VERSION
@@ -66,8 +65,9 @@ C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
 
 if($^O eq 'MSWin32')
 {
-  *print = sub { croak "AnyEvent::Open3::Simple::Process#print is unsupported on this platform" };
-  *say = sub { croak "AnyEvent::Open3::Simple::Process#say is unsupported on this platform" };
+  require Carp;
+  *print = sub { Carp::croak("AnyEvent::Open3::Simple::Process#print is unsupported on this platform") };
+  *say = sub { Carp::croak("AnyEvent::Open3::Simple::Process#say is unsupported on this platform") };
 }
 else
 {
