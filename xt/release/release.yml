@@ -9,6 +9,7 @@ pod_spelling_system:
     - Scaffidi
     - prereq
     - OpenBSD
+    - Wiersdorf
 
 pod_coverage:
   private:

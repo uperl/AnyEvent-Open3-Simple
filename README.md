@@ -270,6 +270,8 @@ contributors:
 
 Stephen R. Scaffidi
 
+Scott Wiersdorf
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2012 by Graham Ollis.
