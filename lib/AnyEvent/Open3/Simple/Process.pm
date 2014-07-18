@@ -47,16 +47,6 @@ Currently on (non cygwin) Windows (Strawberry, ActiveState) this method is not
 supported, so if you need to send (standard) input to the subprocess, use the
 C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
 
-=cut
-
-sub print
-{
-  my $stdin = shift->{stdin};
-  croak "AnyEvent::Open3::Simple::Process#print is unsupported on this platform"
-    if $^O eq 'MSWin32';
-  print $stdin @_;
-}
-
 =head2 say
 
  $proc->say(@data);
@@ -74,9 +64,21 @@ C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
 
 =cut
 
-sub say
+if($^O eq 'MSWin32')
 {
-  shift->print(@_, "\n");
+  *print = sub { croak "AnyEvent::Open3::Simple::Process#print is unsupported on this platform" };
+  *say = sub { croak "AnyEvent::Open3::Simple::Process#say is unsupported on this platform" };
+}
+else
+{
+  *print = sub {
+    my $stdin = shift->{stdin};
+    print $stdin @_;
+  };
+  *say = sub {
+    my $stdin = shift->{stdin};
+    print $stdin @_, "\n";
+  };
 }
 
 =head2 close
