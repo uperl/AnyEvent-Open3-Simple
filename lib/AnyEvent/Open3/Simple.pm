@@ -213,6 +213,10 @@ sub new
  $ipc->run($program, @arguments, \$stdin);
  $ipc->run($program, @arguments, \@stdin);
 
+Version 0.80
+
+ $ipc->run($program, @arguments, \$stdin, sub {...});
+
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
 constructor (except for C<on_start>) will not be called until
@@ -229,6 +233,16 @@ Do not mix the use of passing standard input to L<run|AnyEvent::Open3::Simple#ru
 and L<AnyEvent::Open3::Simple::Process#print> or L<AnyEvent::Open3::Simple::Process#say>,
 otherwise bad things may happen.
 
+Version 0.80
+
+You may optionally provide a subroutine reference which accepts the
+C<$pid> of the new process and which returns a scalar or reference
+that will be passed to C<$proc->user()>:
+
+    $ipc->run($prog, @args, \$stdin, sub { return { pid => shift } });
+
+This is useful for making data accessible to the sub-process that may
+be out of scope otherwise.
 
 =cut
 
@@ -236,6 +250,8 @@ sub run
 {
   croak "run method requires at least one argument"
     unless @_ >= 2;
+
+  my $proc_user = (ref $_[-1] eq 'CODE' ? pop : sub {});
 
   my $stdin = $_[0]->{stdin};
   $stdin = pop if ref $_[-1];
@@ -269,7 +285,8 @@ sub run
   }
   
   my $proc = AnyEvent::Open3::Simple::Process->new($pid, $child_stdin);
-  
+  $proc->user($proc_user->($pid));
+
   $self->{on_start}->($proc, $program, @arguments);
 
   my $watcher_stdout;
