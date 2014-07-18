@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 BEGIN { eval q{ use EV } }
-use Test::More tests => 4;
+use Test::More tests => 2;
 use AnyEvent::Open3::Simple;
 use File::Temp qw( tempdir );
 use AnyEvent;
@@ -32,17 +32,30 @@ my $ipc = AnyEvent::Open3::Simple->new(
   },
 );
 
-my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'), 'arg1', 'arg2');
-isa_ok $ret, 'AnyEvent::Open3::Simple';
+foreach my $iteration (1..2)
+{
+  subtest "iteration $iteration" => sub {
+    plan tests => 6;
+  
+    my $foo = 0;
+    my @cb_args;
+  
+    my $ret = $ipc->run($^X, File::Spec->catfile($dir, 'child.pl'), 'arg1', 'arg2', sub { $foo = $iteration; @cb_args = @_ });
+    isa_ok $ret, 'AnyEvent::Open3::Simple';
 
-my $timeout = AnyEvent->timer (
-  after => 5,
-  cb    => sub { diag 'timeout!'; exit 2; },
-);
+    my $timeout = AnyEvent->timer (
+      after => 5,
+      cb    => sub { diag 'timeout!'; exit 2; },
+    );
 
-$done->recv;
+    $done->recv;
 
-ok $on_start_called, 'on_start event fired';
+    ok $on_start_called, 'on_start event fired';
 
-is $prog, $^X, 'prog';
-is_deeply \@args, [File::Spec->catfile($dir, 'child.pl'), 'arg1', 'arg2'], 'args';
+    is $prog, $^X, 'prog';
+    is_deeply \@args, [File::Spec->catfile($dir, 'child.pl'), 'arg1', 'arg2'], 'args';
+    
+    is_deeply [map { ref } @cb_args], [qw( AnyEvent::Open3::Simple::Process )], 'arguments to run call back are a single $proc object';
+    is $foo, $iteration, "foo set to iteration ($foo = $iteration)";
+  };
+}
