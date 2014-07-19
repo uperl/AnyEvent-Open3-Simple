@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.79_02   2014-07-19 11:44:10 -0400
+  - identical release new version
+
 0.79_01   2014-07-18 11:05:26 -0400
   - added optional callback to run method to allow per-execute callback to
     be called just before on_start.
