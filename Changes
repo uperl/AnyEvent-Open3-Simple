@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.80      2014-07-22 06:50:13 -0400
+  - promote to production
+
 0.79_02   2014-07-19 11:44:10 -0400
   - identical release new version
 
