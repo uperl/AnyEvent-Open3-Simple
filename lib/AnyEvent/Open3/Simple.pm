@@ -214,6 +214,7 @@ sub new
  $ipc->run($program, @arguments, \@stdin);             # (version 0.76)
  $ipc->run($program, @arguments, sub {...});           # (version 0.80)
  $ipc->run($program, @arguments, \$stdin, sub {...});  # (version 0.80)
+ $ipc->run($program, @arguments, \@stdin, sub {...});  # (version 0.80)
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
