@@ -411,10 +411,7 @@ sub run
         use POSIX ":sys_wait_h";
         waitpid($pid, WNOHANG);
       };
-      # shouldn't be throwing an exception
-      # inside a callback, but then it 
-      # this should always work (?)
-      die $@ if $@;
+      warn "IMPORTANT waitpid failed: $@" if $@;
       $end_cb->($kid, $?) if $kid == $pid;
     });
   }
