@@ -222,7 +222,7 @@ The pure perl implementation that comes with [AnyEvent](https://metacpan.org/pod
 on Microsoft Windows so I make [EV](https://metacpan.org/pod/EV) a prereq on that platform 
 (which is automatically used if installed and does work).
 
-Starting with Strawberry Perl 5.20, the idel watcher implementation
+Starting with Strawberry Perl 5.20, the idle watcher implementation
 in combination with [EV](https://metacpan.org/pod/EV) stopped working.  If you see an error like
 this:
 
