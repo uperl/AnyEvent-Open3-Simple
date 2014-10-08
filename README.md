@@ -222,6 +222,17 @@ The pure perl implementation that comes with [AnyEvent](https://metacpan.org/pod
 on Microsoft Windows so I make [EV](https://metacpan.org/pod/EV) a prereq on that platform 
 (which is automatically used if installed and does work).
 
+Starting with Strawberry Perl 5.20, the idel watcher implementation
+in combination with [EV](https://metacpan.org/pod/EV) stopped working.  If you see an error like
+this:
+
+    (libev) select: Unknown error
+
+Then you are seeing this issue.  You can instead use the [Event](https://metacpan.org/pod/Event) back
+end, which does seem to work, though I get a warning when I use that:
+
+    select got errno 128 at ...AnyEvent.pm line 1992.
+
 Writing to a subprocesses stdin with [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
 or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft 
 Windows (it does work under Cygwin though).

@@ -453,6 +453,17 @@ The pure perl implementation that comes with L<AnyEvent>
 on Microsoft Windows so I make L<EV> a prereq on that platform 
 (which is automatically used if installed and does work).
 
+Starting with Strawberry Perl 5.20, the idel watcher implementation
+in combination with L<EV> stopped working.  If you see an error like
+this:
+
+ (libev) select: Unknown error
+
+Then you are seeing this issue.  You can instead use the L<Event> back
+end, which does seem to work, though I get a warning when I use that:
+
+ select got errno 128 at ...AnyEvent.pm line 1992.
+
 Writing to a subprocesses stdin with L<AnyEvent::Open3::Simple::Process#print>
 or L<AnyEvent::Open3::Simple::Process#say> is unsupported on Microsoft 
 Windows (it does work under Cygwin though).

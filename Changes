@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - use Event instead of EV in testing for Strawberry Perl 5.20 or better
 
 0.80      2014-07-22 06:50:13 -0400
   - promote to production
