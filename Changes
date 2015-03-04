@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.82      2015-03-03 23:37:46 -0500
   - Explicitly require Perl 5.6.0 or better
   - Clean up prereqs
 
