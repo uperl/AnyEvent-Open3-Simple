@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Explicitly require Perl 5.6.0 or better
+  - Clean up prereqs
 
 0.81      2014-10-08 11:11:53 -0400
   - use Event instead of EV in testing for Strawberry Perl 5.20 or better

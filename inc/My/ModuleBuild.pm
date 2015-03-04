@@ -2,6 +2,7 @@ package My::ModuleBuild;
 
 use strict;
 use warnings;
+use 5.006;
 use base qw( Module::Build );
 
 sub new

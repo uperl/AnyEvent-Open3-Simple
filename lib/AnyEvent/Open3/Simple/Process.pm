@@ -2,6 +2,7 @@ package AnyEvent::Open3::Simple::Process;
 
 use strict;
 use warnings;
+use 5.006;
 
 # ABSTRACT: Process run using AnyEvent::Open3::Simple
 # VERSION

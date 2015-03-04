@@ -276,9 +276,9 @@ if the exception isn't caught somewhere else.
 
 # AUTHOR
 
-author: Graham Ollis <plicease@cpan.org>
+Author: Graham Ollis <plicease@cpan.org>
 
-contributors:
+Contributors:
 
 Stephen R. Scaffidi
 

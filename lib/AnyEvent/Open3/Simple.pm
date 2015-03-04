@@ -2,6 +2,7 @@ package AnyEvent::Open3::Simple;
 
 use strict;
 use warnings;
+use 5.006;
 use warnings::register;
 use AnyEvent;
 use IPC::Open3 qw( open3 );
