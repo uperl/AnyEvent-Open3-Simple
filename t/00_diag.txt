@@ -1,4 +1,3 @@
 AnyEvent
 EV
 Module::Build
-warnings::register
