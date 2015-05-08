@@ -39,13 +39,12 @@ sub pid { shift->{pid} }
 
 Write to the subprocess' stdin.
 
-Be careful to use either the C<stdin> attribute on the L<AnyEvent::Open::Simple>
-object or this C<print> methods for a given instance of L<AnyEvent::Open3::Simple>,
-but not both!  Otherwise bad things may happen.
+Be careful to use either the C<$stdin> argument on the L<AnyEvent::Open3::Simple#run>
+method for a given instance of L<AnyEvent::Open3::Simple>, but not both!
 
 Currently on (non cygwin) Windows (Strawberry, ActiveState) this method is not
-supported, so if you need to send (standard) input to the subprocess, use the
-C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
+supported, so if you need to send (standard) input to the subprocess, you must pass
+it into the L<AnyEvent::Open3::Simple#run> method.
 
 =head2 say
 
@@ -54,13 +53,12 @@ C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
 Write to the subprocess' stdin, adding a new line at the end.  This functionality
 is unsupported on Microsoft Windows.
 
-Be careful to use either the C<stdin> attribute on the L<AnyEvent::Open::Simple>
-object or this C<say> methods for a given instance of L<AnyEvent::Open3::Simple>,
-but not both!  Otherwise bad things may happen.
+Be careful to use either the C<$stdin> argument on the L<AnyEvent::Open3::Simple#run>
+method for a given instance of L<AnyEvent::Open3::Simple>, but not both!
 
 Currently on (non cygwin) Windows (Strawberry, ActiveState) this method is not
-supported, so if you need to send (standard) input to the subprocess, use the
-C<stdin> attribute on the L<AnyEvent::Open::Simple> constructor.
+supported, so if you need to send (standard) input to the subprocess, you must pass
+it into the L<AnyEvent::Open3::Simple#run> method.
 
 =cut
 

@@ -10,6 +10,7 @@ pod_spelling_system:
     - prereq
     - OpenBSD
     - Wiersdorf
+    - open3
 
 pod_coverage:
   private:
