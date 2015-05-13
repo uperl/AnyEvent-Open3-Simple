@@ -93,12 +93,6 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
-=item * stdin (DEPRECATED)
-
-Deprecated attribute for passing the entire content of stdin to the subprocess.
-This attribute may be removed from a future version of L<AnyEvent::Open3::Simple>
-(but not before 18 March 2015).  Instead use one of
-
 =over 4
 
 =item L<AnyEvent::Open3::Simple::Process#print>
@@ -193,11 +187,6 @@ sub new
   my $args = (reftype($_[0]) || '') eq 'HASH' ? shift : { @_ };
   my %self;
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
-  if($args->{stdin})
-  {
-    warnings::warnif('deprecated', "passing stdin to the constructor of AnyEvent::Open3::Simple is deprecated");
-    $self{stdin} = ref $args->{stdin} ? $args->{stdin} : \$args->{stdin};
-  }
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
              || ($^O eq 'MSWin32' ? 'idle' : 'child');
@@ -258,7 +247,7 @@ sub run
 
   my $proc_user = (ref $_[-1] eq 'CODE' ? pop : sub {});
 
-  my $stdin = $_[0]->{stdin};
+  my $stdin;
   $stdin = pop if ref $_[-1];
 
   my($self, $program, @arguments) = @_;
