@@ -187,6 +187,7 @@ sub new
   my $args = (reftype($_[0]) || '') eq 'HASH' ? shift : { @_ };
   my %self;
   croak "stdin passed into AnyEvent::Open3::Simple->new no longer supported" if $args->{stdin};
+  croak "raw passed into AnyEvent::Open::Simple->new no longer supported" if $args->{raw};
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
