@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Remove deprecated stdin argument passed into new
+  - Remove experimental raw support
 
 0.82      2015-03-03 23:37:46 -0500
   - Explicitly require Perl 5.6.0 or better
@@ -45,7 +47,7 @@ Revision history for {{$dist->name}}
   - perl 5.8 support fixes
 
 0.72      2013-09-09 08:20:35 -0400
-  - marking raw support as experiementalo
+  - marking raw support as experiemental
     https://github.com/plicease/AnyEvent-Open3-Simple/issues/6
   - undocumented (and experimental): on_stderr and on_stdout can be list ref
 
