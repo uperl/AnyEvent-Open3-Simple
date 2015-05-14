@@ -78,12 +78,6 @@ Event callbacks have an `on_` prefix, attributes do not.
 
         % export ANYEVENT_OPEN3_SIMPLE=idle
 
-- stdin (DEPRECATED)
-
-    Deprecated attribute for passing the entire content of stdin to the subprocess.
-    This attribute may be removed from a future version of [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple)
-    (but not before 18 March 2015).  Instead use one of
-
     - [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
     - [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say)
     - [AnyEvent::Open3::Simple#run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)

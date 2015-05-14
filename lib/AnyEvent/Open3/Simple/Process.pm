@@ -39,8 +39,8 @@ sub pid { shift->{pid} }
 
 Write to the subprocess' stdin.
 
-Be careful to use either the C<$stdin> argument on the L<AnyEvent::Open3::Simple#run>
-method for a given instance of L<AnyEvent::Open3::Simple>, but not both!
+Do NOT use this method if you have passed stdin via the C<$stdin> argument
+on the L<AnyEvent::Open3::Simple#run> method.
 
 Currently on (non cygwin) Windows (Strawberry, ActiveState) this method is not
 supported, so if you need to send (standard) input to the subprocess, you must pass
@@ -50,11 +50,10 @@ it into the L<AnyEvent::Open3::Simple#run> method.
 
  $proc->say(@data);
 
-Write to the subprocess' stdin, adding a new line at the end.  This functionality
-is unsupported on Microsoft Windows.
+Write to the subprocess' stdin, adding a new line at the end.
 
-Be careful to use either the C<$stdin> argument on the L<AnyEvent::Open3::Simple#run>
-method for a given instance of L<AnyEvent::Open3::Simple>, but not both!
+Do NOT use this method if you have passed stdin via the C<$stdin> argument
+on the L<AnyEvent::Open3::Simple#run> method.
 
 Currently on (non cygwin) Windows (Strawberry, ActiveState) this method is not
 supported, so if you need to send (standard) input to the subprocess, you must pass
@@ -107,11 +106,12 @@ between callbacks, for example:
  AnyEvent::Open3::Simple->new(
    on_start => sub {
      my($proc) = @_;
-     $proc->user({ message => 'hello there' });
+     $proc->user({ prefix => '> ' });
    },
    on_stdout => sub {
-     my($proc) = @_;
-     say $proc->user->{message};
+     my($proc, $line) = @_;
+     my $prefix = $proc->user->{prefix};
+     say "$prefix$line";
    },
  );
 
