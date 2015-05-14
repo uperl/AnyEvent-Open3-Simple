@@ -191,7 +191,6 @@ sub new
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
              || ($^O eq 'MSWin32' ? 'idle' : 'child');
-  $self{raw} = $args->{raw} || 0;
   croak "unknown implementation $self{impl}" unless $self{impl} =~ /^(idle|child)$/;
   bless \%self, $class;
 }
@@ -287,64 +286,29 @@ sub run
   my $watcher_stdout;
   my $watcher_stderr;
 
-  if($self->{raw})
-  {
+  $watcher_stdout = AnyEvent->io(
+    fh   => $child_stdout,
+    poll => 'r',
+    cb   => sub {
+      my $input = <$child_stdout>;
+      return unless defined $input;
+      $input =~ s/(\015?\012|\015)$//;
+      my $ref = $self->{on_stdout};
+      ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
+    },
+  );
 
-    require AnyEvent::Handle;
-    $watcher_stdout = AnyEvent::Handle->new(
-      fh => $child_stdout,
-      on_error => sub {
-        $self->{on_stdout}->($proc,$_[0]{rbuf});
-      },
-    );
-    $watcher_stdout->on_read(sub {
-      $watcher_stdout->push_read(sub {
-        $DB::single = 1;
-        $self->{on_stdout}->($proc,$_[0]{rbuf});
-        $_[0]{rbuf} = '';
-      });
-    });
-    $watcher_stderr = AnyEvent::Handle->new(
-      fh => $child_stderr,
-      on_error => sub {
-        $self->{on_stderr}->($proc,$_[0]{rbuf});
-      },
-    );
-    $watcher_stderr->on_read(sub {
-      $watcher_stdout->push_read(sub {
-        $self->{on_stderr}->($proc,$_[0]{rbuf});
-        $_[0]{rbuf} = '';
-      });
-    });
-
-  }
-  else
-  {
-
-    $watcher_stdout = AnyEvent->io(
-      fh   => $child_stdout,
-      poll => 'r',
-      cb   => sub {
-        my $input = <$child_stdout>;
-        return unless defined $input;
-        $input =~ s/(\015?\012|\015)$//;
-        my $ref = $self->{on_stdout};
-        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
-      },
-    );
-
-    $watcher_stderr = AnyEvent->io(
-      fh   => $child_stderr,
-      poll => 'r',
-      cb   => sub {
-        my $input = <$child_stderr>;
-        return unless defined $input;
-        $input =~ s/(\015?\012|\015)$//;
-        my $ref = $self->{on_stderr};
-        ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
-      },
-    );
-  }
+  $watcher_stderr = AnyEvent->io(
+    fh   => $child_stderr,
+    poll => 'r',
+    cb   => sub {
+      my $input = <$child_stderr>;
+      return unless defined $input;
+      $input =~ s/(\015?\012|\015)$//;
+      my $ref = $self->{on_stderr};
+      ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
+    },
+  );
 
   my $watcher_child;
 
