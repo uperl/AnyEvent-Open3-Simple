@@ -4,7 +4,7 @@ Interface to open3 under AnyEvent
 
 # SYNOPSIS
 
-    use v5.10;
+    use 5.010;
     use AnyEvent;
     use AnyEvent::Open3::Simple;
     

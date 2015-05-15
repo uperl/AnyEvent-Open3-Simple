@@ -17,7 +17,7 @@ use File::Temp ();
 
 =head1 SYNOPSIS
 
- use v5.10;
+ use 5.010;
  use AnyEvent;
  use AnyEvent::Open3::Simple;
  
