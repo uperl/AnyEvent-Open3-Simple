@@ -11,12 +11,12 @@ use File::Spec;
 my $dir = tempdir( CLEANUP => 1 );
 my $fh;
 open($fh, '>', File::Spec->catfile($dir, 'child.pl'));
-say $fh "#!$^X";
-say $fh 'use File::Spec';
-say $fh "open(\$out, '>', File::Spec->catfile('$dir', 'child.out'));";
-say $fh 'while(<STDIN>) {';
-say $fh '  print $out $_';
-say $fh '}';
+print $fh "#!$^X\n";
+print $fh 'use File::Spec', "\n";
+print $fh "open(\$out, '>', File::Spec->catfile('$dir', 'child.out'));", "\n";
+print $fh 'while(<STDIN>) {', "\n";
+print $fh '  print $out $_', "\n";
+print $fh '}', "\n";
 close $fh;
 
 foreach my $stdin ([ qw( message1 message2 ) ], join("\n", qw( message1 message2 )))

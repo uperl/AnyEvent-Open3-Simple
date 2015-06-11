@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix accidental breakage in 5.8.8
 
 0.83      2015-05-15 07:16:25 -0400
   - Remove deprecated stdin argument passed into new
