@@ -211,21 +211,18 @@ attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
 
-The pure perl implementation that comes with [AnyEvent](https://metacpan.org/pod/AnyEvent)
-([AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl)) does not seem to work with this module
-on Microsoft Windows so I make [EV](https://metacpan.org/pod/EV) a prereq on that platform 
-(which is automatically used if installed and does work).
-
-Starting with Strawberry Perl 5.20, the idle watcher implementation
-in combination with [EV](https://metacpan.org/pod/EV) stopped working.  If you see an error like
-this:
+The pure perl event loop that comes with [AnyEvent](https://metacpan.org/pod/AnyEvent)
+([AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl)) does not work with this module on Microsoft
+Windows (where `$^O eq 'MSWin32'`).  On Strawberry Perl 5.18 and
+earlier [EV](https://metacpan.org/pod/EV) is a prerequisite for this module which does seem to
+work.  On Strawberry Perl 5.20 and later [EV](https://metacpan.org/pod/EV) stopped working and I
+made instead [Event](https://metacpan.org/pod/Event) a prerequisite instead of [EV](https://metacpan.org/pod/EV).  If you see
+an error like this
 
     (libev) select: Unknown error
 
-Then you are seeing this issue.  You can instead use the [Event](https://metacpan.org/pod/Event) back
-end, which does seem to work, though I get a warning when I use that:
-
-    select got errno 128 at ...AnyEvent.pm line 1992.
+then it is likely that you are using an affected Strawberry Perl.
+Try using [Event](https://metacpan.org/pod/Event) as your event loop instead.
 
 Writing to a subprocesses stdin with [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
 or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft 
@@ -270,7 +267,7 @@ if the exception isn't caught somewhere else.
 
 # AUTHOR
 
-Author: Graham Ollis <plicease@cpan.org>
+Author: Graham Ollis &lt;plicease@cpan.org>
 
 Contributors:
 
