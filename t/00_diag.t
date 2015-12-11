@@ -19,7 +19,7 @@ $modules{$_} = $_ for qw(
 $post_diag = sub
 {
   require AnyEvent::Open3::Simple;
-  diag "OS               $^O perl $^V";
+  diag "OS               $^O";
   diag 'implementation   ' . AnyEvent::Open3::Simple->new->{impl};
   diag 'AnyEvent::detect ' . AnyEvent::detect();
 };
