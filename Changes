@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
   - MSWin32 supports EV again.
   - MSWin32 supports AnyEvent::Impl::Perl for the first time.
+  - Switched to EUMM for installer
 
 0.84      2015-06-11 10:39:56 -0400
   - Fix accidental breakage in 5.8.8

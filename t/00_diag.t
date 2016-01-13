@@ -13,7 +13,8 @@ BEGIN { eval q{ use EV; } }
 $modules{$_} = $_ for qw(
   AnyEvent
   EV
-  Module::Build
+  Event
+  ExtUtils::MakeMaker
 );
 
 $post_diag = sub
