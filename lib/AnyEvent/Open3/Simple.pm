@@ -286,30 +286,34 @@ sub run
 
   my $watcher_stdout;
   my $watcher_stderr;
+  
+  my $stdout_callback = sub {
+    my $input = <$child_stdout>;
+    return unless defined $input;
+    $input =~ s/(\015?\012|\015)$//;
+    my $ref = $self->{on_stdout};
+    ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
+  };
 
   $watcher_stdout = AnyEvent->io(
     fh   => $child_stdout,
     poll => 'r',
-    cb   => sub {
-      my $input = <$child_stdout>;
-      return unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      my $ref = $self->{on_stdout};
-      ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
-    },
-  );
+    cb   => $stdout_callback,
+  ) unless $^O eq 'MSWin32';
+  
+  my $stderr_callback = sub {
+    my $input = <$child_stderr>;
+    return unless defined $input;
+    $input =~ s/(\015?\012|\015)$//;
+    my $ref = $self->{on_stderr};
+    ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
+  };
 
   $watcher_stderr = AnyEvent->io(
     fh   => $child_stderr,
     poll => 'r',
-    cb   => sub {
-      my $input = <$child_stderr>;
-      return unless defined $input;
-      $input =~ s/(\015?\012|\015)$//;
-      my $ref = $self->{on_stderr};
-      ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
-    },
-  );
+    cb   => $stderr_callback,
+  ) unless $^O eq 'MSWin32';
 
   my $watcher_child;
 
@@ -367,6 +371,13 @@ sub run
         use POSIX ":sys_wait_h";
         waitpid($pid, WNOHANG);
       };
+      
+      if($^O eq 'MSWin32')
+      {
+        $stdout_callback->() if !eof $child_stdout;
+        $stderr_callback->() if !eof $child_stderr;
+      }
+      
       warn "IMPORTANT waitpid failed: $@" if $@;
       $end_cb->($kid, $?) if $kid == $pid;
     });

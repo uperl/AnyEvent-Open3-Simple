@@ -11,14 +11,7 @@ sub new
   
   if($^O eq 'MSWin32')
   {
-    if(eval q{ use 5.020; 1 })
-    {
-      $args{requires}->{Event} = 0;
-    }
-    else
-    {
-      $args{requires}->{EV} = 0;
-    }
+    $args{requires}->{EV} = 0;
   }
   
   my $self = $class->SUPER::new(%args);

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - MSWin32 supports EV again.
 
 0.84      2015-06-11 10:39:56 -0400
   - Fix accidental breakage in 5.8.8
