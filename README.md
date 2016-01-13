@@ -1,4 +1,4 @@
-# AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple)
+# AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple) [![Build status](https://ci.appveyor.com/api/projects/status/hbsdj04dds4oy6wo/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/AnyEvent-Open3-Simple/branch/master)
 
 Interface to open3 under AnyEvent
 
