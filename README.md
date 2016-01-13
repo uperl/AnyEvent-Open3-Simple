@@ -219,7 +219,7 @@ port of Perl in high regard problems such as this may pop up again
 in the future and may not be addressed, and may be out of the control of the
 author of this module.
 
-Performance for the idel watcher implementation on native Windows (non-Cygwin)
+Performance for the idle watcher implementation on native Windows (non-Cygwin)
 is almost certainly suboptimal, but the author of this module uses it
 and finds it useful despite this.
 
