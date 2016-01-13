@@ -399,12 +399,21 @@ sub run
   }
   elsif($self->{impl} eq 'idle')
   {
+    my($selout, $selerr);
+    
+    if(_is_native_win32())
+    {
+      require IO::Select;
+      $selout = IO::Select->new($child_stdout);
+      $selerr = IO::Select->new($child_stderr);
+    }
+
     $watcher_child = AnyEvent->idle(cb => sub {
       if(_is_native_win32())
       {
         # TODO: replace with IO::Select
-        $stdout_callback->() if !eof $child_stdout;
-        $stderr_callback->() if !eof $child_stderr;
+        $stdout_callback->() if $selout->can_read(0);
+        $stderr_callback->() if $selerr->can_read(0);
       }
       AnyEvent::Open3::Simple::Idle::_watcher($pid, $end_cb);
     });
