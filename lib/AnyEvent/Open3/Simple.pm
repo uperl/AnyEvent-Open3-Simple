@@ -11,6 +11,7 @@ use Symbol qw( gensym );
 use AnyEvent::Open3::Simple::Process;
 use Carp qw( croak );
 use File::Temp ();
+use constant _is_native_win32 => $^O eq 'MSWin32';
 
 # ABSTRACT: Interface to open3 under AnyEvent
 # VERSION
@@ -191,7 +192,7 @@ sub new
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
-             || ($^O eq 'MSWin32' ? 'idle' : 'child');
+             || (_is_native_win32() ? 'idle' : 'child');
   croak "unknown implementation $self{impl}" unless $self{impl} =~ /^(idle|child)$/;
   bless \%self, $class;
 }
@@ -299,7 +300,7 @@ sub run
     fh   => $child_stdout,
     poll => 'r',
     cb   => $stdout_callback,
-  ) unless $^O eq 'MSWin32';
+  ) unless _is_native_win32();
   
   my $stderr_callback = sub {
     my $input = <$child_stderr>;
@@ -313,7 +314,7 @@ sub run
     fh   => $child_stderr,
     poll => 'r',
     cb   => $stderr_callback,
-  ) unless $^O eq 'MSWin32';
+  ) unless _is_native_win32();
 
   my $watcher_child;
 
@@ -372,7 +373,7 @@ sub run
         waitpid($pid, WNOHANG);
       };
       
-      if($^O eq 'MSWin32')
+      if(_is_native_win32())
       {
         $stdout_callback->() if !eof $child_stdout;
         $stderr_callback->() if !eof $child_stderr;
