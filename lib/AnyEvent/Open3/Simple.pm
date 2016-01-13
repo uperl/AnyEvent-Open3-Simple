@@ -412,18 +412,17 @@ attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
 
-The pure perl event loop that comes with L<AnyEvent>
-(L<AnyEvent::Impl::Perl>) does not work with this module on Microsoft
-Windows (where C<$^O eq 'MSWin32'>).  On Strawberry Perl 5.18 and
-earlier L<EV> is a prerequisite for this module which does seem to
-work.  On Strawberry Perl 5.20 and later L<EV> stopped working and I
-made instead L<Event> a prerequisite instead of L<EV>.  If you see
-an error like this
+As of version 0.85, this module works on Windows with L<AnyEvent::Impl::EV>,
+L<AnyEvent::Impl::Event> and L<AnyEvent::Impl::Perl> (possibly others),
+although in the past they have either not worked or had limitations placed
+on them.  Because the author of L<AnyEvent> does not hold the native Windows
+port of Perl in high regard problems such as this may pop up again
+in the future and may not be addressed, and may be out of the control of the
+author of this module.
 
- (libev) select: Unknown error
-
-then it is likely that you are using an affected Strawberry Perl.
-Try using L<Event> as your event loop instead.
+Performance for the idel watcher implementation on native Windows (non-Cygwin)
+is almost certainly suboptimal, but the author of this module uses it
+and finds it useful despite this.
 
 Writing to a subprocesses stdin with L<AnyEvent::Open3::Simple::Process#print>
 or L<AnyEvent::Open3::Simple::Process#say> is unsupported on Microsoft 

@@ -211,18 +211,17 @@ attribute to force it use an idle watcher instead.  Patches for detecting
 environments where idle watchers should be used are welcome and
 encouraged.
 
-The pure perl event loop that comes with [AnyEvent](https://metacpan.org/pod/AnyEvent)
-([AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl)) does not work with this module on Microsoft
-Windows (where `$^O eq 'MSWin32'`).  On Strawberry Perl 5.18 and
-earlier [EV](https://metacpan.org/pod/EV) is a prerequisite for this module which does seem to
-work.  On Strawberry Perl 5.20 and later [EV](https://metacpan.org/pod/EV) stopped working and I
-made instead [Event](https://metacpan.org/pod/Event) a prerequisite instead of [EV](https://metacpan.org/pod/EV).  If you see
-an error like this
+As of version 0.85, this module works on Windows with [AnyEvent::Impl::EV](https://metacpan.org/pod/AnyEvent::Impl::EV),
+[AnyEvent::Impl::Event](https://metacpan.org/pod/AnyEvent::Impl::Event) and [AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl) (possibly others),
+although in the past they have either not worked or had limitations placed
+on them.  Because the author of [AnyEvent](https://metacpan.org/pod/AnyEvent) does not hold the native Windows
+port of Perl in high regard problems such as this may pop up again
+in the future and may not be addressed, and may be out of the control of the
+author of this module.
 
-    (libev) select: Unknown error
-
-then it is likely that you are using an affected Strawberry Perl.
-Try using [Event](https://metacpan.org/pod/Event) as your event loop instead.
+Performance for the idel watcher implementation on native Windows (non-Cygwin)
+is almost certainly suboptimal, but the author of this module uses it
+and finds it useful despite this.
 
 Writing to a subprocesses stdin with [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
 or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft 

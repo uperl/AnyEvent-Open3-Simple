@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-BEGIN { $^O eq 'MSWin32' ? eval q{ use EV; 1 } || q{ use Event } : eval q{ use EV } }
+BEGIN { eval q{ use EV } }
 use Test::More tests => 5;
 use File::Temp qw( tempdir );
 use AnyEvent;

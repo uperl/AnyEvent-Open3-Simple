@@ -11,6 +11,7 @@ pod_spelling_system:
     - OpenBSD
     - Wiersdorf
     - open3
+    - suboptimal
 
 pod_coverage:
   private:
