@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use 5.006;
 use warnings::register;
-use AnyEvent;
 use IPC::Open3 qw( open3 );
 use Scalar::Util qw( reftype );
 use Symbol qw( gensym );
@@ -12,6 +11,7 @@ use AnyEvent::Open3::Simple::Process;
 use Carp qw( croak );
 use File::Temp ();
 use constant _is_native_win32 => $^O eq 'MSWin32';
+use constant _detect => _is_native_win32() ? 'idle' : 'child';
 
 # ABSTRACT: Interface to open3 under AnyEvent
 # VERSION
@@ -180,7 +180,7 @@ Called when the process returns a non-zero exit value.
 =back
 
 =cut
-
+ 
 sub new
 {
   my $default_handler = sub { };
@@ -192,8 +192,10 @@ sub new
   $self{$_} = $args->{$_} || $default_handler for qw( on_stdout on_stderr on_start on_exit on_signal on_fail on_error on_success );
   $self{impl} = $args->{implementation} 
              || $ENV{ANYEVENT_OPEN3_SIMPLE}
-             || (_is_native_win32() ? 'idle' : 'child');
-  croak "unknown implementation $self{impl}" unless $self{impl} =~ /^(idle|child)$/;
+             || _detect();
+  croak "unknown implementation $self{impl}" unless $self{impl} =~ /^(idle|child|mojo)$/;
+  $self{impl} = _detect() 
+    if $self{impl} eq 'mojo' && do { require Mojo::Reactor; Mojo::Reactor->detect eq 'Mojo::Reactor::EV' };
   bless \%self, $class;
 }
 
@@ -271,6 +273,17 @@ sub run
     open TEMP, '<&=', $file;
     $child_stdin = '<&TEMP';
   }
+
+  if($self->{impl} =~ /^(child|idle)$/)
+  {
+    require AnyEvent;
+    AnyEvent::detect();
+    require AnyEvent::Open3::Simple::Idle if $self->{impl} eq 'idle';
+  }
+  elsif($self->{impl} eq 'mojo')
+  {
+    require Mojo::Reactor;
+  }
   
   my $pid = eval { open3 $child_stdin, $child_stdout, $child_stderr, $program, @arguments };
   
@@ -296,12 +309,6 @@ sub run
     ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
   };
 
-  $watcher_stdout = AnyEvent->io(
-    fh   => $child_stdout,
-    poll => 'r',
-    cb   => $stdout_callback,
-  ) unless _is_native_win32();
-  
   my $stderr_callback = sub {
     my $input = <$child_stderr>;
     return unless defined $input;
@@ -310,11 +317,20 @@ sub run
     ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
   };
 
-  $watcher_stderr = AnyEvent->io(
-    fh   => $child_stderr,
-    poll => 'r',
-    cb   => $stderr_callback,
-  ) unless _is_native_win32();
+  if(!_is_native_win32() || $self->{impl} =~ /^(idle|child)$/)
+  {
+    $watcher_stdout = AnyEvent->io(
+      fh   => $child_stdout,
+      poll => 'r',
+      cb   => $stdout_callback,
+    ) unless _is_native_win32();
+  
+    $watcher_stderr = AnyEvent->io(
+      fh   => $child_stderr,
+      poll => 'r',
+      cb   => $stderr_callback,
+    ) unless _is_native_win32();
+  }
 
   my $watcher_child;
 
@@ -365,22 +381,32 @@ sub run
     undef $proc;
   };
 
-  if($self->{impl} eq 'idle')
+  if($self->{impl} eq 'mojo')
+  {
+    $watcher_child = Mojo::Reactor->detect->new;
+    $watcher_child->io( $child_stdout, $stdout_callback );
+    $watcher_child->io( $child_stderr, $stderr_callback );
+    $watcher_child->watch( $child_stdout, 1, 0 );
+    $watcher_child->watch( $child_stderr, 1, 0 );
+
+    my $cb;
+    $cb = sub {
+      AnyEvent::Open3::Simple::Idle::_watcher($pid, $end_cb);
+      $watcher_child->timer(0.25 => $cb) if defined $watcher_child;
+    };
+    $watcher_child->timer(0.25 => $cb);
+   
+  }
+  elsif($self->{impl} eq 'idle')
   {
     $watcher_child = AnyEvent->idle(cb => sub {
-      my $kid = eval q{
-        use POSIX ":sys_wait_h";
-        waitpid($pid, WNOHANG);
-      };
-      
       if(_is_native_win32())
       {
+        # TODO: replace with IO::Select
         $stdout_callback->() if !eof $child_stdout;
         $stderr_callback->() if !eof $child_stderr;
       }
-      
-      warn "IMPORTANT waitpid failed: $@" if $@;
-      $end_cb->($kid, $?) if $kid == $pid;
+      AnyEvent::Open3::Simple::Idle::_watcher($pid, $end_cb);
     });
   }
   else
