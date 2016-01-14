@@ -1,0 +1,29 @@
+---
+
+install:
+  - choco install cyg-get
+  - SET PATH=%PATH%;C:\Cygwin
+  - cyg-get default
+  - cyg-get perl
+  - cyg-get make
+  - cyg-get curl
+  - C:\Cygwin\bin\sh -lc "set -euo pipefail;
+      IFS=$'\n\t';
+      perl -Mlocal::lib >> ~/.bashrc;
+      . ~/.bashrc;
+      curl -L https://cpanmin.us | perl - App::cpanminus;
+      cpanm Dist::Zilla;
+      cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;
+      dzil authordeps --missing | cpanm -n;
+      dzil listdeps --missing | cpanm -n;
+      cpanm Mojolicious"
+
+build: off
+
+test_script:
+  - C:\Cygwin\bin\sh -lc "cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;dzil test -v"
+
+cache:
+  - C:\Perl5
+
+shallow_clone: true
