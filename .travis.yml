@@ -5,6 +5,7 @@ install:
   - perlbrew list
   - dzil authordeps --missing | cpanm -n
   - dzil listdeps --missing | cpanm -n
+  - cpanm Mojolicious
 
 script:
   - dzil test -v
