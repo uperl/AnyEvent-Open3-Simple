@@ -1,23 +1,17 @@
 ---
 
 install:
-  - choco install cyg-get
-  - SET PATH=%PATH%;C:\Cygwin
-  - cyg-get default
-  - cyg-get perl
-  - cyg-get make
-  - cyg-get curl
-  - cyg-get perl-libwww-perl
-  - cyg-get perl-LWP-Protocol-https
-  - cyg-get perl-Clone
-  - cyg-get perl-ExtUtils-CBuilder
-  - cyg-get perl-ExtUtils-MakeMaker
-  - C:\Cygwin\bin\sh -lc "set -euo pipefail;
+  - ps: 'Start-FileDownload "http://cygwin.com/setup-x86.exe" -FileName "setup-x86.exe"'
+  - 'setup-x86.exe --quiet-mode --no-shortcuts --only-site --root C:\Cygwin --site http://cygwin.mirror.constant.com --packages bash,gcc-core,gcc-g++,make,curl,perl,perl-libwww-perl,perl-LWP-Protocol-https,perl-Clone,perl-ExtUtils-CBuilder,ExtUtils-MakeMaker'
+  - C:\Cygwin\bin\sh -xlc "set -euo pipefail;
+       IFS=$'\n\t';
+       curl -L https://cpanmin.us | perl - -l/home/$USER/perl5 App::cpanminus local::lib;
+       perl -I/home/$USER/perl5/lib/perl5 -Mlocal::lib > ~/.bashrc"
+  - C:\Cygwin\bin\sh -xlc "set -euo pipefail;
       IFS=$'\n\t';
-      curl -L https://cpanmin.us | perl - -l~/perl5 App::cpanminus local::lib;
-      perl -I/home/$USER/perl5/lib/perl5 -Mlocal::lib > ~/.bashrc"
-  - C:\Cygwin\bin\sh -lc "set -euo pipefail;
-      IFS=$'\n\t';
+      perl -v;
+      cpanm -n Module::Which;
+      which_pm Module::Which;
       cpanm -n Dist::Zilla;
       cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;
       dzil authordeps --missing | cpanm -n;
@@ -27,7 +21,7 @@ install:
 build: off
 
 test_script:
-  - C:\Cygwin\bin\sh -lc "cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;dzil test -v"
+  - C:\Cygwin\bin\sh -xlc "cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;dzil test -v"
 
 cache:
   - C:\Cygwin\home
