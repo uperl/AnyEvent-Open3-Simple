@@ -1,8 +1,10 @@
 ---
 
+clone_folder: C:\cygwin\home\appveyor\build
+
 install:
   - ps: 'Start-FileDownload "http://cygwin.com/setup-x86.exe" -FileName "setup-x86.exe"'
-  - 'setup-x86.exe --quiet-mode --no-shortcuts --only-site --root C:\Cygwin --site http://cygwin.mirror.constant.com --packages bash,gcc-core,gcc-g++,make,curl,perl,perl-libwww-perl,perl-LWP-Protocol-https,perl-Clone,perl-ExtUtils-CBuilder,ExtUtils-MakeMaker'
+  - 'setup-x86.exe --quiet-mode --no-shortcuts --only-site --root C:\Cygwin --site http://cygwin.mirror.constant.com --packages bash,gcc-core,gcc-g++,make,curl,perl,perl-libwww-perl,perl-LWP-Protocol-https,perl-Clone,perl-ExtUtils-CBuilder,perl-ExtUtils-MakeMaker,perl-DateTime,perl-Module-Build,perl-DateTime-Locale,perl-Module-Runtime,perl-List-MoreUtils,perl-Params-Validate,perl-Module-Implementation,perl-Try-Tiny,perl-DateTime-TimeZone,perl-Class-Singleton,perl-Text-Glob,perl-Test-Exception,perl-Path-Class'
   - C:\Cygwin\bin\sh -xlc "set -euo pipefail;
        IFS=$'\n\t';
        curl -L https://cpanmin.us | perl - -l/home/$USER/perl5 App::cpanminus local::lib;
@@ -21,7 +23,7 @@ install:
 build: off
 
 test_script:
-  - C:\Cygwin\bin\sh -xlc "cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;dzil test -v"
+  - C:\Cygwin\bin\sh -xlc "cd ~/build ; dzil test -v"
 
 cache:
   - C:\Cygwin\home
