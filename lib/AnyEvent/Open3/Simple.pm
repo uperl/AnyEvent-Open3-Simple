@@ -379,20 +379,31 @@ sub run
 
   if($self->{impl} eq 'mojo')
   {
-    my @ids;
-    my $reactor = Mojo::IOLoop->singleton->reactor;
-    $reactor->io( $child_stdout, $stdout_callback );
-    $reactor->io( $child_stderr, $stderr_callback );
-    $reactor->watch( $child_stdout, 1, 0 );
-    $reactor->watch( $child_stderr, 1, 0 );
+    my($selout, $selerr);
+    
+    if(_is_native_win32())
+    {
+      require IO::Select;
+      $selout = IO::Select->new($child_stdout);
+      $selerr = IO::Select->new($child_stderr);
+    }
 
+    my $reactor = Mojo::IOLoop->singleton->reactor;
     my $id;
     $id = Mojo::IOLoop->recurring(0.25 => sub {
       AnyEvent::Open3::Simple::Mojo::_watcher($pid, sub {
         $end_cb->(@_);
         Mojo::IOLoop->remove($id);
-        $reactor->remove($child_stdout);
-        $reactor->remove($child_stderr);
+        if(_is_native_win32())
+        {
+          $stdout_callback->() if $selout->can_read(0);
+          $stderr_callback->() if $selerr->can_read(0);
+        }
+        else
+        {
+          $reactor->remove($child_stdout);
+          $reactor->remove($child_stderr);
+        }
       });
     });
    
@@ -411,7 +422,6 @@ sub run
     $watcher_child = AnyEvent->idle(cb => sub {
       if(_is_native_win32())
       {
-        # TODO: replace with IO::Select
         $stdout_callback->() if $selout->can_read(0);
         $stderr_callback->() if $selerr->can_read(0);
       }

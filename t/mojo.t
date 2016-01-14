@@ -8,6 +8,8 @@ BEGIN {
 use AnyEvent::Open3::Simple;
 use Mojo::IOLoop;
 use Mojo::Reactor;
+use File::Temp qw( tempdir );
+use File::Spec;
 
 plan tests => 8;
 
@@ -47,7 +49,15 @@ my $ipc = AnyEvent::Open3::Simple->new(
   },
 );
 
-$ipc->run($^X, -e => 'print "dragon\n"; print STDERR "lime\n"; exit 22');
+my $program = do {
+  my $fn = File::Spec->catfile( tempdir( CLEANUP => 1 ), 'mojo_test.pl' );
+  open my $fh, '>', $fn;
+  print $fh 'print "dragon\n"; print STDERR "lime\n"; exit 22';
+  close $fh;
+  $fn;
+};
+
+$ipc->run($^X, $program);
 
 Mojo::IOLoop->start;
 
