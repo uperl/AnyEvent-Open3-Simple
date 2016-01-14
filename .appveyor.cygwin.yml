@@ -9,9 +9,9 @@ install:
   - cyg-get curl
   - C:\Cygwin\bin\sh -lc "set -euo pipefail;
       IFS=$'\n\t';
-      perl -Mlocal::lib >> ~/.bashrc;
+      curl -L https://cpanmin.us | perl - -l~/perl5 App::cpanminus local::lib;
+      perl -Mlocal::lib > ~/.bashrc;
       . ~/.bashrc;
-      curl -L https://cpanmin.us | perl - App::cpanminus;
       cpanm Dist::Zilla;
       cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;
       dzil authordeps --missing | cpanm -n;
@@ -24,6 +24,6 @@ test_script:
   - C:\Cygwin\bin\sh -lc "cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;dzil test -v"
 
 cache:
-  - C:\Perl5
+  - C:\Cygwin\home
 
 shallow_clone: true
