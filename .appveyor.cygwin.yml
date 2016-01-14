@@ -10,7 +10,7 @@ install:
   - C:\Cygwin\bin\sh -lc "set -euo pipefail;
       IFS=$'\n\t';
       curl -L https://cpanmin.us | perl - -l~/perl5 App::cpanminus local::lib;
-      perl -Mlocal::lib > ~/.bashrc;
+      perl -I/home/$USER/perl5/lib/perl5 -Mlocal::lib > ~/.bashrc;
       . ~/.bashrc;
       cpanm Dist::Zilla;
       cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;
