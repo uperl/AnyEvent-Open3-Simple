@@ -70,7 +70,7 @@ Event callbacks have an `on_` prefix, attributes do not.
 - implementation
 
     The implementation to use for detecting process termination.  This should
-    be one of `child` or `idle`.  On all platforms except for Microsoft
+    be one of `child`, `idle` or `mojo`.  On all platforms except for Microsoft
     Windows (but not Cygwin) the default is `child`.
 
     You can change the default by setting the `ANYEVENT_OPEN3_SIMPLE`
@@ -78,9 +78,9 @@ Event callbacks have an `on_` prefix, attributes do not.
 
         % export ANYEVENT_OPEN3_SIMPLE=idle
 
-    - [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
-    - [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say)
-    - [AnyEvent::Open3::Simple#run](https://metacpan.org/pod/AnyEvent::Open3::Simple#run)
+    The `mojo` implementation is experimental and allows you to use
+    [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple) with [Mojolicious](https://metacpan.org/pod/Mojolicious) but without [EV](https://metacpan.org/pod/EV)
+    (which is usually required for [AnyEvent](https://metacpan.org/pod/AnyEvent), [Mojolicious](https://metacpan.org/pod/Mojolicious) interaction).
 
 ## EVENTS
 

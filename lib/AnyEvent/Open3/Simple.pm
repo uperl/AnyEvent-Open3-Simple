@@ -86,7 +86,7 @@ Event callbacks have an C<on_> prefix, attributes do not.
 =item * implementation
 
 The implementation to use for detecting process termination.  This should
-be one of C<child> or C<idle>.  On all platforms except for Microsoft
+be one of C<child>, C<idle> or C<mojo>.  On all platforms except for Microsoft
 Windows (but not Cygwin) the default is C<child>.
 
 You can change the default by setting the C<ANYEVENT_OPEN3_SIMPLE>
@@ -94,15 +94,9 @@ environment variable, like this:
 
  % export ANYEVENT_OPEN3_SIMPLE=idle
 
-=over 4
-
-=item L<AnyEvent::Open3::Simple::Process#print>
-
-=item L<AnyEvent::Open3::Simple::Process#say>
-
-=item L<AnyEvent::Open3::Simple#run>
-
-=back
+The C<mojo> implementation is experimental and allows you to use
+L<AnyEvent::Open3::Simple> with L<Mojolicious> but without L<EV>
+(which is usually required for L<AnyEvent>, L<Mojolicious> interaction).
 
 =back
 
@@ -283,6 +277,8 @@ sub run
   elsif($self->{impl} eq 'mojo')
   {
     require Mojo::Reactor;
+    require Mojo::IOLoop;
+    require AnyEvent::Open3::Simple::Mojo;
   }
   
   my $pid = eval { open3 $child_stdin, $child_stdout, $child_stderr, $program, @arguments };
@@ -317,7 +313,7 @@ sub run
     ref($ref) eq 'ARRAY' ? push @$ref, $input : $ref->($proc, $input);
   };
 
-  if(!_is_native_win32() || $self->{impl} =~ /^(idle|child)$/)
+  if(!_is_native_win32() && $self->{impl} =~ /^(idle|child)$/)
   {
     $watcher_stdout = AnyEvent->io(
       fh   => $child_stdout,
@@ -383,18 +379,22 @@ sub run
 
   if($self->{impl} eq 'mojo')
   {
-    $watcher_child = Mojo::Reactor->detect->new;
-    $watcher_child->io( $child_stdout, $stdout_callback );
-    $watcher_child->io( $child_stderr, $stderr_callback );
-    $watcher_child->watch( $child_stdout, 1, 0 );
-    $watcher_child->watch( $child_stderr, 1, 0 );
+    my @ids;
+    my $reactor = Mojo::IOLoop->singleton->reactor;
+    $reactor->io( $child_stdout, $stdout_callback );
+    $reactor->io( $child_stderr, $stderr_callback );
+    $reactor->watch( $child_stdout, 1, 0 );
+    $reactor->watch( $child_stderr, 1, 0 );
 
-    my $cb;
-    $cb = sub {
-      AnyEvent::Open3::Simple::Idle::_watcher($pid, $end_cb);
-      $watcher_child->timer(0.25 => $cb) if defined $watcher_child;
-    };
-    $watcher_child->timer(0.25 => $cb);
+    my $id;
+    $id = Mojo::IOLoop->recurring(0.25 => sub {
+      AnyEvent::Open3::Simple::Mojo::_watcher($pid, sub {
+        $end_cb->(@_);
+        Mojo::IOLoop->remove($id);
+        $reactor->remove($child_stdout);
+        $reactor->remove($child_stderr);
+      });
+    });
    
   }
   elsif($self->{impl} eq 'idle')

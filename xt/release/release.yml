@@ -12,6 +12,7 @@ pod_spelling_system:
     - Wiersdorf
     - open3
     - suboptimal
+    - mojo
 
 pod_coverage:
   private:
