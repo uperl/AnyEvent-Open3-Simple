@@ -1,7 +1,10 @@
 use strict;
 use warnings;
-use Mojolicious 6.02;
 use Test::More;
+BEGIN {
+  plan skip_all => 'Test requires Mojolicious 6.02'
+    unless eval q{ use Mojolicious 6.02; 1 };
+}
 use AnyEvent::Open3::Simple;
 use Mojo::IOLoop;
 use Mojo::Reactor;
