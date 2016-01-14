@@ -13,11 +13,11 @@ install:
       perl -I/home/$USER/perl5/lib/perl5 -Mlocal::lib > ~/.bashrc"
   - C:\Cygwin\bin\sh -lc "set -euo pipefail;
       IFS=$'\n\t';
-      cpanm Dist::Zilla;
+      cpanm -n Dist::Zilla;
       cd /cygdrive/c/projects/$APPVEYOR_PROJECT_NAME;
       dzil authordeps --missing | cpanm -n;
       dzil listdeps --missing | cpanm -n;
-      cpanm Mojolicious"
+      cpanm -n Mojolicious"
 
 build: off
 
