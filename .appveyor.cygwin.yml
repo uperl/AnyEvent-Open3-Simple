@@ -7,6 +7,11 @@ install:
   - cyg-get perl
   - cyg-get make
   - cyg-get curl
+  - cyg-get perl-libwww-perl
+  - cyg-get perl-LWP-Protocol-https
+  - cyg-get perl-Clone
+  - cyg-get perl-ExtUtils-CBuilder
+  - cyg-get perl-ExtUtils-MakeMaker
   - C:\Cygwin\bin\sh -lc "set -euo pipefail;
       IFS=$'\n\t';
       curl -L https://cpanmin.us | perl - -l~/perl5 App::cpanminus local::lib;
