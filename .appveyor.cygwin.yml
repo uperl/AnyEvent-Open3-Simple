@@ -7,7 +7,7 @@ install:
   - 'setup-x86.exe --quiet-mode --no-shortcuts --only-site --root C:\Cygwin --site http://cygwin.mirror.constant.com --packages bash,gcc-core,gcc-g++,make,curl,perl,perl-libwww-perl,perl-LWP-Protocol-https,perl-Clone,perl-ExtUtils-CBuilder,perl-ExtUtils-MakeMaker,perl-DateTime,perl-Module-Build,perl-DateTime-Locale,perl-Module-Runtime,perl-List-MoreUtils,perl-Params-Validate,perl-Module-Implementation,perl-Try-Tiny,perl-DateTime-TimeZone,perl-Class-Singleton,perl-Text-Glob,perl-Test-Exception,perl-Path-Class'
   - C:\Cygwin\bin\sh -xlc "set -euo pipefail;
        IFS=$'\n\t';
-       curl -L https://cpanmin.us | perl - -l/home/$USER/perl5 App::cpanminus local::lib;
+       curl -L https://cpanmin.us | perl - -v -l/home/$USER/perl5 App::cpanminus local::lib;
        perl -I/home/$USER/perl5/lib/perl5 -Mlocal::lib > ~/.bashrc"
   - C:\Cygwin\bin\sh -xlc "set -euo pipefail;
       IFS=$'\n\t';
