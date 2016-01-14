@@ -15,6 +15,7 @@ $modules{$_} = $_ for qw(
   EV
   Event
   ExtUtils::MakeMaker
+  Mojolicious
 );
 
 $post_diag = sub
