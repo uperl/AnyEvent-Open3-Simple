@@ -13,7 +13,7 @@ use File::Spec;
 
 plan tests => 8;
 
-$ENV{MOJO_REACTOR} = 'Mojo::Reactor::Bogus';
+$ENV{MOJO_REACTOR} = 'Mojo::Reactor::Poll';
 
 isnt(Mojo::Reactor->detect, 'Mojo::Reactor::EV', "Mojo::Reactor->detect = @{[ Mojo::Reactor->detect ]}");
 
