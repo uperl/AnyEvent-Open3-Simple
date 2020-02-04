@@ -1,4 +1,4 @@
-# AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple) [![Build status](https://ci.appveyor.com/api/projects/status/hbsdj04dds4oy6wo/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/AnyEvent-Open3-Simple/branch/master)
+# AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple) [![Build status](https://ci.appveyor.com/api/projects/status/hbsdj04dds4oy6wo/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/AnyEvent-Open3-Simple/branch/master) ![windows](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/macos/badge.svg)
 
 Interface to open3 under AnyEvent
 
@@ -18,7 +18,7 @@ my $ipc = AnyEvent::Open3::Simple->new(
     my @args = @_;          # list of arguments
     say 'child PID: ', $proc->pid;
   },
-  on_stdout => sub { 
+  on_stdout => sub {
     my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
     my $line = shift;       # string
     say 'out: ', $string;
@@ -53,13 +53,13 @@ $done->recv;
 
 This module provides an interface to open3 while running under AnyEvent
 that delivers data from stdout and stderr as lines are written by the
-subprocess.  The interface is reminiscent of [IPC::Open3::Simple](https://metacpan.org/pod/IPC::Open3::Simple), 
+subprocess.  The interface is reminiscent of [IPC::Open3::Simple](https://metacpan.org/pod/IPC::Open3::Simple),
 although this module does provides a somewhat different API, so it
 cannot be used a drop in replacement for that module.
 
 There are already a number of interfaces for interacting with subprocesses
 in the context of [AnyEvent](https://metacpan.org/pod/AnyEvent), but this one is the most convenient for my
-usage.  Note the modules listed in the SEE ALSO section below for other 
+usage.  Note the modules listed in the SEE ALSO section below for other
 interfaces that may be more or less appropriate.
 
 # CONSTRUCTOR
@@ -88,14 +88,14 @@ Event callbacks have an `on_` prefix, attributes do not.
 
 ## EVENTS
 
-These events will be triggered by the subprocess when the run method is 
-called. Each event callback (except `on_error`) gets passed in an 
-instance of [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process) as its first argument 
-which can be used to get the PID of the subprocess, or to write to it.  
-`on_error` does not get a process object because it indicates an error in 
+These events will be triggered by the subprocess when the run method is
+called. Each event callback (except `on_error`) gets passed in an
+instance of [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process) as its first argument
+which can be used to get the PID of the subprocess, or to write to it.
+`on_error` does not get a process object because it indicates an error in
 the creation of the process.
 
-Not all of these events will fire depending on the execution of the 
+Not all of these events will fire depending on the execution of the
 child process.  In the very least exactly one of `on_start` or `on_error`
 will be called.
 
@@ -112,12 +112,12 @@ will be called.
 
     Called when there is an execution error, for example, if you ask
     to run a program that does not exist.  No process is passed in
-    because the process failed to create.  The error passed in is 
+    because the process failed to create.  The error passed in is
     the error thrown by [IPC::Open3](https://metacpan.org/pod/IPC::Open3) (typically a string which begins
     with "open3: ...").
 
     In some environments open3 is unable to detect exec errors in the
-    child, so you may not be able to rely on this event.  It does 
+    child, so you may not be able to rely on this event.  It does
     seem to work consistently on Perl 5.14 or better though.
 
     Different environments have different ways of handling it when
@@ -141,7 +141,7 @@ will be called.
 - `on_exit` ($proc, $exit\_value, $signal)
 
     Called when the processes completes, either because it called exit,
-    or if it was killed by a signal.  
+    or if it was killed by a signal.
 
 - `on_success` ($proc)
 
@@ -177,7 +177,7 @@ You may optionally provide the full content of standard input
 as a string reference or list reference as the last argument
 (or second to last if you are providing a callback below).
 If provided as a list reference, it will be joined by new lines
-in whatever format is native to your Perl.  Currently on 
+in whatever format is native to your Perl.  Currently on
 (non cygwin) Windows (Strawberry, ActiveState) this is the only
 way to provide standard input to the subprocess.
 
@@ -186,7 +186,7 @@ and [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::
 otherwise bad things may happen.
 
 In version 0.80 or better, you may provide a callback as the last argument
-which is called before `on_start`, and takes the process object as its only 
+which is called before `on_start`, and takes the process object as its only
 argument.  For example:
 
 ```perl
@@ -205,7 +205,7 @@ be out of scope otherwise.
 # CAVEATS
 
 Some AnyEvent implementations may not work properly with the method
-used by AnyEvent::Open3::Simple to wait for the child process to 
+used by AnyEvent::Open3::Simple to wait for the child process to
 terminate.  See ["CHILD-PROCESS-WATCHERS" in AnyEvent](https://metacpan.org/pod/AnyEvent#CHILD-PROCESS-WATCHERS) for details.
 
 This module uses an idle watcher instead of a child watcher to detect
@@ -232,7 +232,7 @@ is almost certainly suboptimal, but the author of this module uses it
 and finds it useful despite this.
 
 Writing to a subprocesses stdin with [AnyEvent::Open3::Simple::Process#print](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#print)
-or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft 
+or [AnyEvent::Open3::Simple::Process#say](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process#say) is unsupported on Microsoft
 Windows (it does work under Cygwin though).
 
 There are some traps for the unwary relating to buffers and deadlocks,
