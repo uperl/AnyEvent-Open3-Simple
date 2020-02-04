@@ -25,7 +25,7 @@ else
       $proc{$pid} = $?;
     }
   };
-  
+
   *_watcher = sub
   {
     my($pid, $cb) = @_;

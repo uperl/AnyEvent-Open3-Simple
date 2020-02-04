@@ -100,7 +100,7 @@ Version 0.77
  my $user_data = $proc->user;
 
 Get or set user defined data tied to the process object.  Any
-Perl data structure may be used.  Useful for persisting data 
+Perl data structure may be used.  Useful for persisting data
 between callbacks, for example:
 
  AnyEvent::Open3::Simple->new(
