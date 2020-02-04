@@ -4,48 +4,50 @@ Interface to open3 under AnyEvent
 
 # SYNOPSIS
 
-    use 5.010;
-    use AnyEvent;
-    use AnyEvent::Open3::Simple;
-    
-    my $done = AnyEvent->condvar;
-    
-    my $ipc = AnyEvent::Open3::Simple->new(
-      on_start => sub {
-        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
-        my $program = shift;    # string
-        my @args = @_;          # list of arguments
-        say 'child PID: ', $proc->pid;
-      },
-      on_stdout => sub { 
-        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
-        my $line = shift;       # string
-        say 'out: ', $string;
-      },
-      on_stderr => sub {
-        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
-        my $line = shift;       # string
-        say 'err: ', $line;
-      },
-      on_exit   => sub {
-        my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
-        my $exit_value = shift; # integer
-        my $signal = shift;     # integer
-        say 'exit value: ', $exit_value;
-        say 'signal:     ', $signal;
-        $done->send;
-      },
-      on_error => sub {
-        my $error = shift;      # the exception thrown by IPC::Open3::open3
-        my $program = shift;    # string
-        my @args = @_;          # list of arguments
-        warn "error: $error";
-        $done->send;
-      },
-    );
-    
-    $ipc->run('echo', 'hello there');
-    $done->recv;
+```perl
+use 5.010;
+use AnyEvent;
+use AnyEvent::Open3::Simple;
+
+my $done = AnyEvent->condvar;
+
+my $ipc = AnyEvent::Open3::Simple->new(
+  on_start => sub {
+    my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+    my $program = shift;    # string
+    my @args = @_;          # list of arguments
+    say 'child PID: ', $proc->pid;
+  },
+  on_stdout => sub { 
+    my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+    my $line = shift;       # string
+    say 'out: ', $string;
+  },
+  on_stderr => sub {
+    my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+    my $line = shift;       # string
+    say 'err: ', $line;
+  },
+  on_exit   => sub {
+    my $proc = shift;       # isa AnyEvent::Open3::Simple::Process
+    my $exit_value = shift; # integer
+    my $signal = shift;     # integer
+    say 'exit value: ', $exit_value;
+    say 'signal:     ', $signal;
+    $done->send;
+  },
+  on_error => sub {
+    my $error = shift;      # the exception thrown by IPC::Open3::open3
+    my $program = shift;    # string
+    my @args = @_;          # list of arguments
+    warn "error: $error";
+    $done->send;
+  },
+);
+
+$ipc->run('echo', 'hello there');
+$done->recv;
+```
 
 # DESCRIPTION
 
@@ -76,7 +78,9 @@ Event callbacks have an `on_` prefix, attributes do not.
     You can change the default by setting the `ANYEVENT_OPEN3_SIMPLE`
     environment variable, like this:
 
-        % export ANYEVENT_OPEN3_SIMPLE=idle
+    ```
+    % export ANYEVENT_OPEN3_SIMPLE=idle
+    ```
 
     The `mojo` implementation is experimental and allows you to use
     [AnyEvent::Open3::Simple](https://metacpan.org/pod/AnyEvent::Open3::Simple) with [Mojolicious](https://metacpan.org/pod/Mojolicious) but without [EV](https://metacpan.org/pod/EV)
@@ -155,12 +159,14 @@ will be called.
 
 ## run
 
-    $ipc->run($program, @arguments);
-    $ipc->run($program, @arguments, \$stdin);             # (version 0.76)
-    $ipc->run($program, @arguments, \@stdin);             # (version 0.76)
-    $ipc->run($program, @arguments, sub {...});           # (version 0.80)
-    $ipc->run($program, @arguments, \$stdin, sub {...});  # (version 0.80)
-    $ipc->run($program, @arguments, \@stdin, sub {...});  # (version 0.80)
+```perl
+$ipc->run($program, @arguments);
+$ipc->run($program, @arguments, \$stdin);             # (version 0.76)
+$ipc->run($program, @arguments, \@stdin);             # (version 0.76)
+$ipc->run($program, @arguments, sub {...});           # (version 0.80)
+$ipc->run($program, @arguments, \$stdin, sub {...});  # (version 0.80)
+$ipc->run($program, @arguments, \@stdin, sub {...});  # (version 0.80)
+```
 
 Start the given program with the given arguments.  Returns
 immediately.  Any events that have been specified in the
@@ -183,13 +189,15 @@ In version 0.80 or better, you may provide a callback as the last argument
 which is called before `on_start`, and takes the process object as its only 
 argument.  For example:
 
-    foreach my $i (1..10)
-    {
-      $ipc->run($prog, @args, \$stdin, sub {
-        my($proc) = @_;
-        $proc->user({ iteration => $i });
-      });
-    }
+```perl
+foreach my $i (1..10)
+{
+  $ipc->run($prog, @args, \$stdin, sub {
+    my($proc) = @_;
+    $proc->user({ iteration => $i });
+  });
+}
+```
 
 This is useful for making data accessible to `$ipc` object's callbacks that may
 be out of scope otherwise.
@@ -234,28 +242,32 @@ If you register a call back for `on_exit`, but not `on_error` then
 use a condition variable to wait for the process to complete as in
 this:
 
-    my $cv = AnyEvent->condvar;
-    my $ipc = AnyEvent::Open3::Simple->new(
-      on_exit => sub { $cv->send },
-    );
-    $ipc->run('command_not_found');
-    $cv->recv;
+```perl
+my $cv = AnyEvent->condvar;
+my $ipc = AnyEvent::Open3::Simple->new(
+  on_exit => sub { $cv->send },
+);
+$ipc->run('command_not_found');
+$cv->recv;
+```
 
 You might be waiting forever if there is an error starting the
 process (if for example you give it a bad command).  To handle
 this situation you might use croak on the condition variable
 in the event of error:
 
-    my $cv = AnyEvent->condvar;
-    my $ipc = AnyEvent::Open3::Simple->new(
-      on_exit => sub { $cv->send },
-      on_error => sub {
-        my $error = shift;
-        $cv->croak($error);
-      },
-    );
-    $ipc->run('command_not_found');
-    $cv->recv;
+```perl
+my $cv = AnyEvent->condvar;
+my $ipc = AnyEvent::Open3::Simple->new(
+  on_exit => sub { $cv->send },
+  on_error => sub {
+    my $error = shift;
+    $cv->croak($error);
+  },
+);
+$ipc->run('command_not_found');
+$cv->recv;
+```
 
 This will cause the `recv` to die, printing a useful diagnostic
 if the exception isn't caught somewhere else.
