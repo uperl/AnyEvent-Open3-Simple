@@ -264,7 +264,7 @@ sub run
       : $$stdin
     );
     $file->seek(0,0);
-    open TEMP, '<&=', $file;
+    open TEMP, '<&=', $file;  ## no critic
     $child_stdin = '<&TEMP';
   }
 
