@@ -1,4 +1,4 @@
-# AnyEvent::Open3::Simple ![linux](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/linux/badge.svg) ![windows](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/macos/badge.svg) ![cygwin](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/cygwin/badge.svg)
+# AnyEvent::Open3::Simple ![linux](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/linux/badge.svg) ![windows](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/macos/badge.svg) ![cygwin](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/cygwin/badge.svg) ![msys2-mingw](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/msys2-mingw/badge.svg)
 
 Interface to open3 under AnyEvent
 
