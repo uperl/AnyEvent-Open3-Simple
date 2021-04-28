@@ -1,4 +1,4 @@
-# AnyEvent::Open3::Simple [![Build Status](https://secure.travis-ci.org/plicease/AnyEvent-Open3-Simple.png)](http://travis-ci.org/plicease/AnyEvent-Open3-Simple) [![Build status](https://ci.appveyor.com/api/projects/status/hbsdj04dds4oy6wo/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/AnyEvent-Open3-Simple/branch/master) ![windows](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/macos/badge.svg)
+# AnyEvent::Open3::Simple ![linux](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/linux/badge.svg) ![windows](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/plicease/AnyEvent-Open3-Simple/workflows/macos/badge.svg)
 
 Interface to open3 under AnyEvent
 
