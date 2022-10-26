@@ -1,4 +1,4 @@
-# AnyEvent::Open3::Simple ![linux](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/linux/badge.svg) ![windows](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/macos/badge.svg) ![cygwin](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/cygwin/badge.svg) ![msys2-mingw](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/msys2-mingw/badge.svg)
+# AnyEvent::Open3::Simple ![linux](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/linux/badge.svg) ![windows](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/windows/badge.svg) ![macos](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/macos/badge.svg) ![msys2-mingw](https://github.com/uperl/AnyEvent-Open3-Simple/workflows/msys2-mingw/badge.svg)
 
 Interface to open3 under AnyEvent
 
@@ -274,7 +274,18 @@ if the exception isn't caught somewhere else.
 
 # SEE ALSO
 
-[AnyEvent::Subprocess](https://metacpan.org/pod/AnyEvent::Subprocess), [AnyEvent::Util](https://metacpan.org/pod/AnyEvent::Util), [AnyEvent::Run](https://metacpan.org/pod/AnyEvent::Run).
+- [AnyEvent::Open3::Simple::Process](https://metacpan.org/pod/AnyEvent::Open3::Simple::Process)
+
+    Represents a process being run by this module, typically passed
+    into the callbacks.
+
+- [AnyEvent::Subprocess](https://metacpan.org/pod/AnyEvent::Subprocess)
+
+    Alternative to this module.
+
+- [AnyEvent::Run](https://metacpan.org/pod/AnyEvent::Run)
+
+    Alternative to this module.
 
 # AUTHOR
 

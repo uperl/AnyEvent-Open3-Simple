@@ -14,3 +14,21 @@ sub _watcher
 }
 
 1;
+
+=head1 SYNOPSIS
+
+ $ perldoc AnyEvent::Open3::Simple
+
+=head1 DESCRIPTION
+
+This is a private module.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<AnyEvent::Open3::Simple>
+
+=back
+
+=cut

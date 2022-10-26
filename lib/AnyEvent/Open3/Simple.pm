@@ -509,6 +509,21 @@ if the exception isn't caught somewhere else.
 
 =head1 SEE ALSO
 
-L<AnyEvent::Subprocess>, L<AnyEvent::Util>, L<AnyEvent::Run>.
+=over 4
+
+=item L<AnyEvent::Open3::Simple::Process>
+
+Represents a process being run by this module, typically passed
+into the callbacks.
+
+=item L<AnyEvent::Subprocess>
+
+Alternative to this module.
+
+=item L<AnyEvent::Run>
+
+Alternative to this module.
+
+=back
 
 =cut

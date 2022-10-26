@@ -125,3 +125,13 @@ sub user
 }
 
 1;
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<AnyEvent::Open3::Simple>
+
+=back
+
+=cut
