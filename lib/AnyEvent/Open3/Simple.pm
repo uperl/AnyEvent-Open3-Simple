@@ -445,7 +445,7 @@ sub run
 
 Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to
-terminate.  See L<AnyEvent/"CHILD-PROCESS-WATCHERS"> for details.
+terminate.  See L<AnyEvent/"CHILD PROCESS WATCHERS"> for details.
 
 This module uses an idle watcher instead of a child watcher to detect
 program termination on Microsoft Windows (but not Cygwin).  This is
@@ -462,7 +462,7 @@ As of version 0.85, this module works on Windows with L<AnyEvent::Impl::EV>,
 L<AnyEvent::Impl::Event> and L<AnyEvent::Impl::Perl> (possibly others),
 although in the past they have either not worked or had limitations placed
 on them.  Because the author of L<AnyEvent> does not hold the native Windows
-port of Perl in high regard problems such as this may pop up again
+port of Perl in high regard: problems such as this may pop up again
 in the future and may not be addressed, and may be out of the control of the
 author of this module.
 
