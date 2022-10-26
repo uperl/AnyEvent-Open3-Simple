@@ -206,7 +206,7 @@ be out of scope otherwise.
 
 Some AnyEvent implementations may not work properly with the method
 used by AnyEvent::Open3::Simple to wait for the child process to
-terminate.  See ["CHILD-PROCESS-WATCHERS" in AnyEvent](https://metacpan.org/pod/AnyEvent#CHILD-PROCESS-WATCHERS) for details.
+terminate.  See ["CHILD PROCESS WATCHERS" in AnyEvent](https://metacpan.org/pod/AnyEvent#CHILD-PROCESS-WATCHERS) for details.
 
 This module uses an idle watcher instead of a child watcher to detect
 program termination on Microsoft Windows (but not Cygwin).  This is
@@ -223,7 +223,7 @@ As of version 0.85, this module works on Windows with [AnyEvent::Impl::EV](https
 [AnyEvent::Impl::Event](https://metacpan.org/pod/AnyEvent::Impl::Event) and [AnyEvent::Impl::Perl](https://metacpan.org/pod/AnyEvent::Impl::Perl) (possibly others),
 although in the past they have either not worked or had limitations placed
 on them.  Because the author of [AnyEvent](https://metacpan.org/pod/AnyEvent) does not hold the native Windows
-port of Perl in high regard problems such as this may pop up again
+port of Perl in high regard: problems such as this may pop up again
 in the future and may not be addressed, and may be out of the control of the
 author of this module.
 

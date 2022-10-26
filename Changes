@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Documentation improvements (gh#19)
 
 0.87      2019-04-16 17:32:23 -0400
   - Require Test::More 0.98 for test fixes (gh#12)
