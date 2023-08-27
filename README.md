@@ -297,6 +297,8 @@ Stephen R. Scaffidi
 
 Scott Wiersdorf
 
+Graham Knop (HAARG)
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2012-2022 by Graham Ollis.
