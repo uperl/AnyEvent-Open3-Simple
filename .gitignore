@@ -1,2 +1,4 @@
 /AnyEvent-Open3-Simple-*
 /.build
+*.old
+*.orig
